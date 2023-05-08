@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="layout" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhtw.swen2.presentation.view.ApplicationView">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="%menu.file.title">
+                    <items>
+                        <MenuItem fx:id="miPreferences" mnemonicParsing="false" text="%menu.file.preferences" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="miQuit" mnemonicParsing="false" onAction="#onFileClose" text="%menu.file.quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%menu.help.title">
+                    <items>
+                        <MenuItem fx:id="miAbout" mnemonicParsing="false" onAction="#onHelpAbout" text="%menu.help.about" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="%tab.demo.title">
+                    <content>
+                        <SplitPane disable="true" dividerPositions="0.265">
+                            <items>
+                                <ScrollPane prefHeight="200.0" prefWidth="531.0" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox prefHeight="200.0" prefWidth="531.0">
+<!--                                            <fx:include source="TourList.fxml" />-->
+                                            <fx:include source="NewTour.fxml" />
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                                <ScrollPane prefHeight="200.0" prefWidth="531.0" VBox.vgrow="ALWAYS">
+                                    <content>
+                                        <VBox prefHeight="200.0" prefWidth="531.0">
+                                            <fx:include source="TourList.fxml" />
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+                <Tab text="%tab.logs.title">
+                    <content>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    <bottom>
+        <ToolBar maxHeight="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" BorderPane.alignment="CENTER">
+            <items>
+                <Label fx:id="tbMonitorStatus" />
+                <Label text="%tab.monitor.status" />
+                <Separator orientation="VERTICAL" />
+            </items>
+        </ToolBar>
+    </bottom>
+</BorderPane>

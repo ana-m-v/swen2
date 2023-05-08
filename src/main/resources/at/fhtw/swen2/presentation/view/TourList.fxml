@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.fhtw.swen2.presentation.view.TourListView"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <VBox>
+            <children>
+                <Button fx:id="deleteButton" onAction="#deleteButtonAction" text="delete">Delete</Button>
+            </children>
+            <children>
+            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+                <columns>
+                    <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+                </columns>
+            </TableView>
+            </children>
+            <children>
+                <ImageView fx:id="tourImageView">
+
+                </ImageView>
+            </children>
+        </VBox>
+<!--        <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">-->
+<!--            <columns>-->
+<!--                <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />-->
+<!--            </columns>-->
+<!--        </TableView>-->
+<!--        <VBox fx:id="dataContainer"-->
+<!--              AnchorPane.leftAnchor="10.0"-->
+<!--              AnchorPane.rightAnchor="10.0"-->
+<!--              AnchorPane.topAnchor="50.0">-->
+
+<!--        </VBox>-->
+    </children>
+
+</AnchorPane>
