@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="layout" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhtw.swen2.presentation.view.ApplicationView">
+<BorderPane fx:id="layout" prefHeight="850.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhtw.swen2.presentation.view.ApplicationView">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -26,9 +23,9 @@
         </MenuBar>
     </top>
     <center>
-        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
-                <Tab text="%tab.demo.title">
+                <Tab fx:id="tab0" text="%tab.demo.title">
                     <content>
                         <SplitPane disable="true" dividerPositions="0.265">
                             <items>
@@ -42,7 +39,7 @@
                                 </ScrollPane>
                                 <ScrollPane prefHeight="200.0" prefWidth="531.0" VBox.vgrow="ALWAYS">
                                     <content>
-                                        <VBox prefHeight="200.0" prefWidth="531.0">
+                                        <VBox prefHeight="322.0" prefWidth="531.0">
                                             <fx:include source="TourList.fxml" />
                                         </VBox>
                                     </content>
@@ -51,8 +48,39 @@
                         </SplitPane>
                     </content>
                 </Tab>
-                <Tab text="%tab.logs.title">
+
+                <Tab fx:id="tab1" text="%tab.edit.title">
                     <content>
+                        <SplitPane disable="true" dividerPositions="0.265" orientation="VERTICAL">
+                            <items>
+                                <ScrollPane prefHeight="1000.0" prefWidth="531.0" VBox.vgrow="ALWAYS" >
+                                    <content>
+                                        <VBox prefHeight="1000.0" prefWidth="531.0">
+                                            <!--                                            <fx:include source="TourList.fxml" />-->
+                                            <fx:include source="EditTourList.fxml" />
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="tab2" text="%tab.logs.title">
+                    <content>
+                        <SplitPane disable="true" dividerPositions="0.265" orientation="VERTICAL">
+                            <items>
+                                <ScrollPane prefHeight="1000.0" prefWidth="531.0" VBox.vgrow="ALWAYS" >
+                                    <content>
+                                        <VBox prefHeight="1000.0" prefWidth="531.0">
+                                            <!--                                            <fx:include source="TourList.fxml" />  -->
+                                            <fx:include source="LogList.fxml" />
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                            </items>
+                        </SplitPane>
                     </content>
                 </Tab>
             </tabs>

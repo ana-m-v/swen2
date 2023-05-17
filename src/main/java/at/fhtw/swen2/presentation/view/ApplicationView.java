@@ -6,16 +6,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,6 +27,8 @@ public class ApplicationView implements Initializable, StageAware {
 
     ApplicationEventPublisher publisher;
 
+    TourListView tourListView;
+
     @FXML
     BorderPane layout;
 
@@ -34,6 +37,13 @@ public class ApplicationView implements Initializable, StageAware {
     MenuItem miPreferences;
     @FXML MenuItem miQuit;
     @FXML MenuItem miAbout;
+
+    @FXML
+    public TabPane tabPane;
+    @FXML
+    public Tab tab0;
+    @FXML
+    public Tab tab1;
 
     // Toolbar, at some point break out
     @FXML
@@ -67,4 +77,5 @@ public class ApplicationView implements Initializable, StageAware {
     public void setStage(Stage stage) {
         this.stage.setValue(stage);
     }
+
 }

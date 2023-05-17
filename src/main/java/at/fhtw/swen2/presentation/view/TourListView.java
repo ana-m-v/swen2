@@ -1,23 +1,31 @@
 package at.fhtw.swen2.presentation.view;
 
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+
+import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 @Component
 @Scope("prototype")
@@ -28,19 +36,39 @@ public class TourListView implements Initializable {
     ListView<TourDTO> tourList = new ListView<>();
     @FXML
     public TableView tableView = new TableView<>();
+
     @FXML
     private TableColumn<TourDTO, String> nameColumn;
     @FXML
+    private TableColumn<TourDTO, String> fromColumn;
+    @FXML
+    private TableColumn<TourDTO, String> toColumn;
+    @FXML
+    private TableColumn<TourDTO, String> transportTypeColumn;
+    @FXML
+    private TableColumn<TourDTO, Double> distanceColumn;
+    @FXML
+    private TableColumn<TourDTO, String> timeColumn;
+
+
+    @FXML
     private ImageView tourImageView;
+    private ApplicationContext applicationContext;
     @FXML
-    private Button deleteButton;
+    public Button deleteButton;
     @FXML
-    private Button editButton;
+    public static Button editButton;
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        fromColumn.setCellValueFactory(new PropertyValueFactory<>("From"));
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
+        transportTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transportType"));
+        distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
         tableView.setItems(tourListViewModel.getTours());
 
         tableView.setOnMouseClicked(event -> {
@@ -59,12 +87,8 @@ public class TourListView implements Initializable {
                 }
             }
         });
-
         tourListViewModel.refreshTours();
     }
 
-    public void deleteButtonAction(ActionEvent actionEvent) {
-        tourListViewModel.deleteTour((TourDTO) tableView.getSelectionModel().getSelectedItem());
-        tourImageView.setImage(null);
-    }
+
 }

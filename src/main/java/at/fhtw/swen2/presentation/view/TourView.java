@@ -65,13 +65,26 @@ public class TourView implements Initializable {
         fromTextField.textProperty().bindBidirectional(tourViewModel.fromProperty());
         toTextField.textProperty().bindBidirectional(tourViewModel.toProperty());
         transportTypeChoiceBox.setItems(FXCollections.observableArrayList(TransportType.values()));
-
         transportTypeChoiceBox.valueProperty().bindBidirectional(tourViewModel.transportTypeProperty());
     }
     public void submitButtonAction(ActionEvent event) {
         if (nameTextField.getText().isEmpty() || descriptionTextField.getText().isEmpty() || fromTextField.getText().isEmpty() || toTextField.getText().isEmpty() || transportTypeChoiceBox.getValue() == null) {
             feedbackText.setText("nothing entered!");
             return;
+        }
+        try {
+            int intTest = Integer.parseInt(fromTextField.getText());
+            feedbackText.setText("Destination can't be a number");
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println("Input String cannot be parsed to Integer. Good!");
+        }
+        try {
+            int intTest = Integer.parseInt(toTextField.getText());
+            feedbackText.setText("Destination can't be a number");
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println("Input String cannot be parsed to Integer. Good!");
         }
         tourViewModel.createTour();
     }

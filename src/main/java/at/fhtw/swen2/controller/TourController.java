@@ -50,9 +50,22 @@ public class TourController {
         System.out.println("IN CREATE in viewmodel");
         String from = tourDto.getFrom();
         String to = tourDto.getTo();
+        // Validate user input, maybe put in class later on, replaces everything except listed chars
+        to= to.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
+        from = from.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
+        System.out.println("User input From To: " + to + from);
         String transportType = valueOf(tourDto.getTransportType());
         System.out.println("Transport type in Post " + transportType);
-
+        //check if "," is followed by postal code - integer
+   /*     String[] hasPostalCode = to.split(",");
+        if(!hasPostalCode[1].isEmpty()) {
+            System.out.println("found ',' is it digit?" + Character.isDigit(hasPostalCode[1].charAt(0)));
+        } else if(Character.isDigit(hasPostalCode[1].charAt(0))){
+            System.out.println("Error- no postal code");
+            logger.error("Error creating tour, postal code is missing");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } */
+        // replace needed for html parsing
         from = from.replace(" ", "%20");
         to = to.replace(" ", "%20");
 
@@ -105,7 +118,6 @@ public class TourController {
     public Map<String, Object> getRouteInfo(@RequestParam String from, @RequestParam String to, @RequestParam String transportType) {
         from = from.replace(" ", "%20");
         to = to.replace(" ", "%20");
-
         String apiUrl = String.format("http://www.mapquestapi.com/directions/v2/route?key=%s&from=%s&to=%s&routeType=%s",
                 apiKey, from, to, transportType);
 
@@ -172,5 +184,13 @@ public class TourController {
         System.out.println("in controller delete : " + id);
 
         tourService.deleteTour(id);
+    }
+
+
+
+    @PutMapping("/{id}")
+    public void updateTour(@PathVariable Long id, @RequestBody TourDTO tourDto){
+        System.out.println("Wanna update row");
+        tourService.updateTour(tourDto);
     }
 }

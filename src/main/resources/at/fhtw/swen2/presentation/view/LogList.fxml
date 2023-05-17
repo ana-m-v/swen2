@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.fhtw.swen2.presentation.view.LogListView"
+            prefHeight="800.0" prefWidth="1400.0">
+<HBox>
+    <children>
+        <TableView fx:id="tableViewTour" prefHeight="350.0" prefWidth="700.0">
+            <columns>
+                <TableColumn fx:id="nameColumn" prefWidth="30.0" text="Name" />
+                <TableColumn fx:id="fromColumn" prefWidth="30.0" text="From" />
+                <TableColumn fx:id="toColumn" prefWidth="30.0" text="To" />
+                <TableColumn fx:id="transportTypeColumn" prefWidth="30.0" text="Transport Type" />
+                <TableColumn fx:id="distanceColumn" prefWidth="20.0" text="Distance" />
+                <TableColumn fx:id="timeColumn" prefWidth="20.0" text="Time" />
+            </columns>
+        </TableView>
+    </children>
+    <children>
+        <VBox>
+            <children>
+                <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="dateTimeTextField" />
+                <Label text="Time needed:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="totalTimeTextField" />
+                <Label text="Rating:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="ratingTextField" />
+                <Label text="Difficulty:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="difficultyTextField" />
+                <Label text="Comment:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="commentTextField" prefHeight="0.0" prefWidth="75.0" />
+            </children>
+            <children>
+                <Button fx:id="saveLogButton" onAction="#saveLogButtonAction" text="Create New Log"></Button>
+            </children>
+            <children>
+         <TableView fx:id="tableViewLog" prefHeight="350.0" prefWidth="700.0">
+            <columns>
+                <TableColumn fx:id="totalTimeColumn" prefWidth="75.0" text="TotalTime" />
+                <TableColumn fx:id="dateTimeColumn" prefWidth="75.0" text="Date/Time" />
+                <TableColumn fx:id="ratingColumn" prefWidth="75.0" text="Rating 1-10" />
+                <TableColumn fx:id="difficultyColumn" prefWidth="75.0" text="Difficulty 1-10" />
+                <TableColumn fx:id="commentColumn" prefWidth="150.0" text="Comment" />
+            </columns>
+        </TableView>
+            </children>
+        </VBox>
+    </children>
+
+</HBox>
+</AnchorPane>

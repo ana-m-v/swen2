@@ -1,18 +1,25 @@
 package at.fhtw.swen2.persistence.entity;
 
 import at.fhtw.swen2.model.TourDTO;
+import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.model.TransportType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.Set;
 
+import java.util.HashSet;
+import java.util.List;
+
+// @table missing?
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tour")
 public class TourEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +40,23 @@ public class TourEntity {
     private double distance;
     @Column
     private int estimatedTime;
+
+    public List<TourLogEntity> getTourLogs() {
+        return tourLogs;
+    }
+
+    public void setTourLogs(List<TourLogEntity> tourLogs) {
+        this.tourLogs = tourLogs;
+    }
+
     @Column(length = Integer.MAX_VALUE)
     private String routeImage;
+    @OneToMany(mappedBy = "tour")
+    private List<TourLogEntity> tourLogs;
+    /*
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "tour_id")
+    private Set<TourLogDTO> tourLogs = new HashSet<>();   */
 
     public TourEntity(TourDTO tourDTO) {
         this.id = tourDTO.getId();
@@ -72,6 +94,30 @@ public class TourEntity {
 
     public String getName() {
         return name;
+    }
+
+    public String getFromDestination() {
+        return fromDestination;
+    }
+
+    public void setFromDestination(String fromDestination) {
+        this.fromDestination = fromDestination;
+    }
+
+    public String getToDestination() {
+        return toDestination;
+    }
+
+    public void setToDestination(String toDestination) {
+        this.toDestination = toDestination;
+    }
+
+    public int getEstimatedTime() {
+        return estimatedTime;
+    }
+
+    public void setEstimatedTime(int estimatedTime) {
+        this.estimatedTime = estimatedTime;
     }
 
     public void setName(String name) {

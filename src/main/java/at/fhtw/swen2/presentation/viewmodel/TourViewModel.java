@@ -26,6 +26,7 @@ public class TourViewModel {
     private SimpleIntegerProperty time = new SimpleIntegerProperty();
     private SimpleDoubleProperty distance = new SimpleDoubleProperty();
 
+
     private SimpleStringProperty routeImage = new SimpleStringProperty();
 
     private ObjectProperty<TourDTO> selectedTour = new SimpleObjectProperty<>();
@@ -175,5 +176,33 @@ public class TourViewModel {
         } catch (RestClientException e) {
             e.printStackTrace();
         }
+    }
+    public void updateEditedTour(TourDTO tour) {
+        try {
+            restTemplate.put(baseUrl + "/" + tour.getId(), tour);
+            //tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
+            tourListViewModel.refreshTours();
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void saveEditTour(Long id) {
+
+        TourDTO tour = TourDTO.builder()
+                .name(getName()).description(getDescription()).distance(getDistance())
+                .time(getTime()).from(getFrom()).to(getTo())
+                .transportType(getTransportType()).distance(getDistance()).routeImage(getRouteImage())
+                .build();
+        try {
+            restTemplate.put(baseUrl + "/" + id, tour);
+            tourListViewModel.refreshTours();
+            //tourListViewModel.getTours().add(tour);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+
     }
 }
