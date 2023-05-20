@@ -1,0 +1,47 @@
+.label {
+    -fx-font-size: 20px;
+}
+
+.separator {
+    -fx-pref-width: 200px;
+}
+
+.text {
+    -fx-font-size: 12px;
+}
+
+.text-field {
+    -fx-pref-width: 200px;
+    -fx-border-color: rgba(136, 136, 220, 0.53);
+}
+
+.choice-box {
+    -fx-pref-width: 100px;
+}
+
+.button {
+    -fx-pref-width: 100px;
+    -fx-background-color: rgba(136, 136, 220, 0.53);
+}
+
+.vbox {
+    -fx-spacing: 5;
+}
+
+.feedback-text {
+    -fx-fill: red;
+}
+
+.vbox-main {
+    -fx-max-height: -infinity;
+    -fx-max-width: 300px;
+    -fx-min-height: -infinity;
+    -fx-min-width: 200px;
+    -fx-pref-width: 200px;
+    -fx-spacing: 8px;
+    -fx-padding: 8px;
+}
+
+.demo-title-label {
+    -fx-font-size: 14px;
+}

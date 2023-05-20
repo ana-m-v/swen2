@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- SearchView.fxml -->
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="at.fhtw.swen2.presentation.view.SearchView" stylesheets="@Search.css">
+    <TextField fx:id="searchField" />
+    <Button text="Search" onAction="#searchButtonAction"/>
+
+    <!-- Table for displaying tour information -->
+    <TableView fx:id="tourTable">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" />
+            <TableColumn fx:id="fromColumn" text="From" />
+            <TableColumn fx:id="toColumn" text="To" />
+            <TableColumn fx:id="transportTypeColumn" text="Transport Type" />
+            <TableColumn fx:id="distanceColumn" text="Distance" />
+            <TableColumn fx:id="timeColumn" text="Time" />
+            <TableColumn fx:id="popularityColumn" text="Popularity" />
+            <TableColumn fx:id="childFriendlyColumn" text="Child Friendly" />
+
+        </columns>
+    </TableView>
+
+    <!-- Table for displaying tour log information -->
+    <TableView fx:id="tourLogTable">
+        <columns>
+            <TableColumn fx:id="totalTimeColumn" text="TotalTime" />
+            <TableColumn fx:id="dateTimeColumn" text="Date/Time" />
+            <TableColumn fx:id="ratingColumn" text="Rating 1-10" />
+            <TableColumn fx:id="difficultyColumn" text="Difficulty 1-10" />
+            <TableColumn fx:id="commentColumn" text="Comment" />
+        </columns>
+    </TableView>
+</VBox>

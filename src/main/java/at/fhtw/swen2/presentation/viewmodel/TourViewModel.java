@@ -2,9 +2,12 @@ package at.fhtw.swen2.presentation.viewmodel;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TransportType;
-import at.fhtw.swen2.persistence.entity.TourEntity;
+import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import javafx.beans.property.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -12,8 +15,14 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class TourViewModel {
 
+    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
     @Autowired
     TourListViewModel tourListViewModel;
+
+    @Autowired
+    TourLogListViewModel tourLogListViewModel;
+    @Autowired
+    TourLogViewModel tourLogViewModel;
     private TourDTO tourDTO;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080/tours";
@@ -25,7 +34,32 @@ public class TourViewModel {
     private SimpleObjectProperty<TransportType> transportType = new SimpleObjectProperty<>();
     private SimpleIntegerProperty time = new SimpleIntegerProperty();
     private SimpleDoubleProperty distance = new SimpleDoubleProperty();
+    private SimpleIntegerProperty popularity = new SimpleIntegerProperty();
+    private SimpleIntegerProperty childFriendly = new SimpleIntegerProperty();
 
+    public int getPopularity() {
+        return popularity.get();
+    }
+
+    public SimpleIntegerProperty popularityProperty() {
+        return popularity;
+    }
+
+    public void setPopularity(int popularity) {
+        this.popularity.set(popularity);
+    }
+
+    public int getChildFriendly() {
+        return childFriendly.get();
+    }
+
+    public SimpleIntegerProperty childFriendlyProperty() {
+        return childFriendly;
+    }
+
+    public void setChildFriendly(int childFriendly) {
+        this.childFriendly.set(childFriendly);
+    }
 
     private SimpleStringProperty routeImage = new SimpleStringProperty();
 
@@ -41,6 +75,9 @@ public class TourViewModel {
         this.time = new SimpleIntegerProperty(tourDTO.getTime());
         this.routeImage = new SimpleStringProperty(tourDTO.getRouteImage());
         this.distance = new SimpleDoubleProperty(tourDTO.getDistance());
+        this.popularity = new SimpleIntegerProperty(tourDTO.getPopularity());
+        this.childFriendly = new SimpleIntegerProperty(tourDTO.getChildFriendly());
+
     }
 
     // getter and setter for selectedTour
@@ -174,6 +211,7 @@ public class TourViewModel {
             TourDTO response = restTemplate.postForObject(baseUrl, tour, TourDTO.class);
             tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
         } catch (RestClientException e) {
+            logger.error("Error with createTour() in TourViewModel");
             e.printStackTrace();
         }
     }
@@ -183,10 +221,9 @@ public class TourViewModel {
             //tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
             tourListViewModel.refreshTours();
         } catch (RestClientException e) {
+            logger.error("Error with updateEditedTour() in TourViewModel");
             e.printStackTrace();
         }
-
-
     }
 
     public void saveEditTour(Long id) {
@@ -204,5 +241,18 @@ public class TourViewModel {
             e.printStackTrace();
         }
 
+    }
+
+    public void deleteTour(TourDTO tourDTO) {
+        try {
+            System.out.println("in viewmodel delete : " + tourDTO.getId());
+            restTemplate.delete(baseUrl + "/" + tourDTO.getId());
+            tourListViewModel.getTours().remove(tourDTO);
+            tourLogListViewModel.refreshTourLogs();
+//            selectedTour.set(null);
+        } catch (RestClientException e) {
+            logger.error("Error with deleteTour() in TourViewModel");
+            e.printStackTrace();
+        }
     }
 }

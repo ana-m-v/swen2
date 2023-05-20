@@ -1,9 +1,13 @@
 package at.fhtw.swen2.presentation.viewmodel;
 
+import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.model.TransportType;
 import at.fhtw.swen2.persistence.entity.TourEntity;
+import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import javafx.beans.property.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -14,9 +18,15 @@ import java.sql.Timestamp;
 @Component
 public class TourLogViewModel {
 
+    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
     @Autowired
     TourLogListViewModel tourLogListViewModel;
+
+    @Autowired
+    TourListViewModel tourListViewModel;
     private TourLogDTO tourLogDTO;
+    private ObjectProperty<TourLogDTO> selectedTourLog = new SimpleObjectProperty<>();
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080/tourlogs";
     private SimpleLongProperty id = new SimpleLongProperty();
@@ -26,24 +36,53 @@ public class TourLogViewModel {
     private SimpleIntegerProperty rating = new SimpleIntegerProperty();
     private SimpleIntegerProperty difficulty = new SimpleIntegerProperty();
     private SimpleStringProperty comment = new SimpleStringProperty();
+    private SimpleStringProperty dateTime = new SimpleStringProperty();
 
-    private SimpleObjectProperty<Timestamp> dateTime = new SimpleObjectProperty<>();
-
- //   private SimpleStringProperty routeImage = new SimpleStringProperty();
-
-    public Timestamp getDateTime() {
+    public String getDateTime() {
         return dateTime.get();
     }
 
-    public SimpleObjectProperty<Timestamp> dateTimeProperty() {
+    public SimpleStringProperty dateTimeProperty() {
         return dateTime;
     }
 
-    public void setDateTime(Timestamp dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime.set(dateTime);
     }
+//    private SimpleObjectProperty<Timestamp> dateTime = new SimpleObjectProperty<>();
 
-    private ObjectProperty<TourLogDTO> selectedTourLog = new SimpleObjectProperty<>();
+    private SimpleLongProperty tourId = new SimpleLongProperty();
+
+    public void setSelectedTourLog(TourLogDTO tourLog) {
+        selectedTourLog.set(tourLog);
+    }
+
+    public long getTourId() {
+        return tourId.get();
+    }
+
+    public SimpleLongProperty tourIdProperty() {
+        return tourId;
+    }
+
+    public void setTourId(long tourId) {
+        this.tourId.set(tourId);
+    }
+
+ //   private SimpleStringProperty routeImage = new SimpleStringProperty();
+
+//    public Timestamp getDateTime() {
+//        return dateTime.get();
+//    }
+//
+//    public SimpleObjectProperty<Timestamp> dateTimeProperty() {
+//        return dateTime;
+//    }
+//
+//    public void setDateTime(Timestamp dateTime) {
+//        this.dateTime.set(dateTime);
+//    }
+
 
     public TourLogViewModel(TourLogDTO tourLogDTO) {
         this.tourLogDTO = tourLogDTO;
@@ -144,13 +183,58 @@ public class TourLogViewModel {
     public void setComment(String comment) {
         this.comment.set(comment);
     }
-    public void createTourLog() {
-        TourLogDTO tour = TourLogDTO.builder().dateTime(getDateTime()).comment(getComment())
-                .difficulty(getDifficulty()).rating(getRating()).totalTime(getTotalTime()).build();
+//    public void createTourLog() {
+//        TourLogDTO tour = TourLogDTO.builder().dateTime(getDateTime()).comment(getComment())
+//                .difficulty(getDifficulty()).rating(getRating()).totalTime(getTotalTime()).build();
+//        try {
+//            TourLogDTO response = restTemplate.postForObject(baseUrl, tour, TourLogDTO.class);
+//            tourLogListViewModel.getTourLogs().add(response); // Add the newly created tour to the list of tours
+//        } catch (RestClientException e) {
+//            e.printStackTrace();
+//        }
+//    }
+public void createTourLog(TourDTO tour) {
+
+    TourLogDTO tourLogDTO = TourLogDTO.builder()
+            .dateTime(Timestamp.valueOf(getDateTime()))
+            .comment(getComment())
+            .difficulty(getDifficulty())
+            .rating(getRating())
+            .totalTime(getTotalTime())
+            .build();
+
+    try {
+        TourLogDTO response = restTemplate.postForObject(baseUrl + "?tourId=" + tour.getId(), tourLogDTO, TourLogDTO.class);
+        tourLogListViewModel.getTourLogs().add(response);
+        tourListViewModel.refreshTours();
+    } catch (RestClientException e) {
+        logger.error("Error in createTourLog() in TourLogViewModel");
+        e.printStackTrace();
+    }
+}
+
+    public void deleteTourLog(TourLogDTO selectedTourLog) {
         try {
-            TourLogDTO response = restTemplate.postForObject(baseUrl, tour, TourLogDTO.class);
-            tourLogListViewModel.getTourLogs().add(response); // Add the newly created tour to the list of tours
+            restTemplate.delete(baseUrl + "/" + selectedTourLog.getId());
+            tourLogListViewModel.getTourLogs().remove(selectedTourLog);
+            tourLogListViewModel.refreshTourLogs();
+            tourListViewModel.refreshTours();
+
+//            selectedTour.set(null);
         } catch (RestClientException e) {
+            logger.error("Error in deleteTourLog() in TourLogViewModel");
+            e.printStackTrace();
+        }
+    }
+
+    public void updateTourLog(TourLogDTO tourLog) {
+        try {
+            restTemplate.put(baseUrl + "/" + tourLog.getId(), tourLog);
+            //tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
+            tourLogListViewModel.refreshTourLogs();
+            tourListViewModel.refreshTours();
+        } catch (RestClientException e) {
+            logger.error("Error in updateTourLog() in TourLogViewModel");
             e.printStackTrace();
         }
     }

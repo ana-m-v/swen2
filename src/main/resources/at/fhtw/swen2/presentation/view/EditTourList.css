@@ -1,0 +1,26 @@
+.anchor-pane-main {
+    -fx-pref-height: 1000px;
+    -fx-pref-width: 600px;
+}
+
+.table-view {
+    -fx-pref-height: 350px;
+    -fx-pref-width: 700px;
+}
+
+TableColumn {
+    -fx-pref-width: 75px;
+}
+
+.vbox {
+    -fx-spacing: 10px;
+}
+
+Button {
+    -fx-pref-width: 100px;
+    -fx-background-color: rgba(136, 136, 220, 0.53);
+}
+
+.feedback-text {
+    -fx-fill: red;
+}

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @Builder
 @Component
@@ -20,11 +23,23 @@ public class TourDTO {
     private double distance;
     private int time;
     private String routeImage;
-//    private List<TourLogDTO> tourLogs;
+
+    private int childFriendly;
+    private int popularity;
+
+    public List<TourLogDTO> getTourLogs() {
+        return tourLogs;
+    }
+
+    public void setTourLogs(List<TourLogDTO> tourLogs) {
+        this.tourLogs = tourLogs;
+    }
+
+    private List<TourLogDTO> tourLogs;
 
     public TourDTO(){};
 
-    public TourDTO(Long id, String name, String description, String from, String to, TransportType transportType, double distance, int time, String routeImage) {
+    public TourDTO(Long id, String name, String description, String from, String to, TransportType transportType, double distance, int time, String routeImage, int childFriendly, int popularity, List<TourLogDTO> tourLogs) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -34,26 +49,25 @@ public class TourDTO {
         this.distance = distance;
         this.time = time;
         this.routeImage = routeImage;
-//        this.tourLogs = tourLogs;
+        this.childFriendly = childFriendly;
+        this.popularity = popularity;
+        this.tourLogs = tourLogs;
     }
-
     public TourDTO(TourEntity tour) {
         this.id = tour.getId();
         this.name = tour.getName();
         this.description = tour.getDescription();
-        this.from = tour.getFrom();
-        this.to = tour.getTo();
+        this.from = tour.getFromDestination();
+        this.to = tour.getToDestination();
         this.transportType = tour.getTransportType();
         this.distance = tour.getDistance();
-        this.time = tour.getTime();
+        this.time = tour.getEstimatedTime();
         this.routeImage = tour.getRouteImage();
-//        this.tourLogs = tour.getTourLogs().stream()
-//                .map(tourLogEntity -> new TourLogDTO(tourLogEntity.getDateTime(),
-//                        tourLogEntity.getComment(),
-//                        tourLogEntity.getDifficulty(),
-//                        tourLogEntity.getTotalTime(),
-//                        tourLogEntity.getRating()))
-//                .collect(Collectors.toList());
+        this.childFriendly = tour.getChildFriendly();
+        this.popularity = tour.getPopularity();
+        this.tourLogs = tour.getTourLogs().stream()
+                .map(TourLogDTO::new)
+                .collect(Collectors.toList());
     }
 
     public long getId() {
@@ -134,5 +148,20 @@ public class TourDTO {
         this.routeImage = routeImage;
     }
 
+    public int getChildFriendly() {
+        return childFriendly;
+    }
+
+    public void setChildFriendly(int childFriendly) {
+        this.childFriendly = childFriendly;
+    }
+
+    public int getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(int popularity) {
+        this.popularity = popularity;
+    }
 
 }

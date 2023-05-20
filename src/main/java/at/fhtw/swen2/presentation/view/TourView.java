@@ -2,6 +2,7 @@ package at.fhtw.swen2.presentation.view;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TransportType;
+import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.presentation.viewmodel.TourViewModel;
 import javafx.beans.property.ObjectProperty;
@@ -17,6 +18,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,7 +32,9 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 @Slf4j
 public class TourView implements Initializable {
-//    public javafx.scene.control.TextField nameField;
+
+    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
+
     @Autowired
     private TourViewModel tourViewModel;
 
@@ -60,6 +65,7 @@ public class TourView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle rb) {
+        logger.info("TourView initialized");
         nameTextField.textProperty().bindBidirectional(tourViewModel.nameProperty());
         descriptionTextField.textProperty().bindBidirectional(tourViewModel.descriptionProperty());
         fromTextField.textProperty().bindBidirectional(tourViewModel.fromProperty());
@@ -68,8 +74,9 @@ public class TourView implements Initializable {
         transportTypeChoiceBox.valueProperty().bindBidirectional(tourViewModel.transportTypeProperty());
     }
     public void submitButtonAction(ActionEvent event) {
-        if (nameTextField.getText().isEmpty() || descriptionTextField.getText().isEmpty() || fromTextField.getText().isEmpty() || toTextField.getText().isEmpty() || transportTypeChoiceBox.getValue() == null) {
-            feedbackText.setText("nothing entered!");
+        if (nameTextField.getText() == null || descriptionTextField.getText() == null || fromTextField.getText() == null || toTextField.getText() == null || transportTypeChoiceBox.getValue() == null) {
+            feedbackText.setText("All of the fields must be filled out.");
+            logger.warn("Empty fields in Create New Tour Form");
             return;
         }
         try {
@@ -88,5 +95,4 @@ public class TourView implements Initializable {
         }
         tourViewModel.createTour();
     }
-
 }

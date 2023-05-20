@@ -114,6 +114,95 @@ public class TourController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TourDTO> updateEditedTour(@PathVariable("id") String tourId, @RequestBody TourDTO tourDto) {
+
+        // find that tour to be edited
+        TourDTO existingTour = tourService.getTourById(Long.valueOf(tourId));
+        if (existingTour != null) {
+            // Update the tour with the new data
+            existingTour.setName(tourDto.getName());
+            existingTour.setDescription(tourDto.getDescription());
+            existingTour.setFrom(tourDto.getFrom());
+            existingTour.setTo(tourDto.getTo());
+            // Update other properties new map bla
+
+            System.out.println("IN CREATE in viewmodel");
+            String from = tourDto.getFrom();
+            String to = tourDto.getTo();
+            // Validate user input, maybe put in class later on, replaces everything except listed chars
+            to= to.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
+            from = from.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
+            System.out.println("User input From To: " + to + from);
+            String transportType = valueOf(tourDto.getTransportType());
+            System.out.println("Transport type in Post " + transportType);
+            //check if "," is followed by postal code - integer
+   /*     String[] hasPostalCode = to.split(",");
+        if(!hasPostalCode[1].isEmpty()) {
+            System.out.println("found ',' is it digit?" + Character.isDigit(hasPostalCode[1].charAt(0)));
+        } else if(Character.isDigit(hasPostalCode[1].charAt(0))){
+            System.out.println("Error- no postal code");
+            logger.error("Error creating tour, postal code is missing");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } */
+            // replace needed for html parsing
+            from = from.replace(" ", "%20");
+            to = to.replace(" ", "%20");
+
+            try {
+                double distance;
+                int estimatedTime;
+                String imgUrl;
+
+                // Call getRouteInfo to get the distance and estimated time
+                Map<String, Object> routeInfo = getRouteInfo(from, to, transportType);
+                if (routeInfo != null) {
+                    distance = (double) routeInfo.get("distance");
+                    estimatedTime = (int) routeInfo.get("time");
+                    String session = (String) routeInfo.get("session");
+                    Double ulLat = (Double) routeInfo.get("ulLat");
+                    Double ulLng = (Double) routeInfo.get("ulLng");
+                    Double lrLat = (Double) routeInfo.get("lrLat");
+                    Double lrLng = (Double) routeInfo.get("lrLng");
+
+                    String ulLatString = ulLat.toString();
+                    String ulLngString = ulLng.toString();
+                    String lrLatString = lrLat.toString();
+                    String lrLngString = lrLng.toString();
+
+                    System.out.println("ULLAT " + ulLat);
+
+                    imgUrl = String.format("https://www.mapquestapi.com/staticmap/v5/map?key=%s&size=600,400&boundingBox=%s,%s,%s,%s&session=%s",
+                            apiKey, ulLatString, ulLngString, lrLatString, lrLngString, session);
+                    System.out.println("route info " + routeInfo);
+                } else {
+                    logger.error("Error getting route information");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                }
+
+                existingTour.setDistance(distance);
+                existingTour.setTime(estimatedTime);
+                existingTour.setRouteImage(imgUrl);
+
+                tourService.updateTour(existingTour);
+
+//                return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.error("Error updating tour", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+
+            // Return a success response
+            return new ResponseEntity<>(tourDto, HttpStatus.OK);
+
+//            return ResponseEntity.ok("Tour updated successfully.");
+        } else {
+            // If the tour with the given ID doesn't exist, return an error response
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
     @GetMapping("/routeinfo")
     public Map<String, Object> getRouteInfo(@RequestParam String from, @RequestParam String to, @RequestParam String transportType) {
         from = from.replace(" ", "%20");
@@ -182,15 +271,12 @@ public class TourController {
     @DeleteMapping("/{id}")
     public void deleteTour(@PathVariable Long id) {
         System.out.println("in controller delete : " + id);
-
         tourService.deleteTour(id);
     }
 
-
-
-    @PutMapping("/{id}")
-    public void updateTour(@PathVariable Long id, @RequestBody TourDTO tourDto){
-        System.out.println("Wanna update row");
-        tourService.updateTour(tourDto);
+    @GetMapping("/search")
+    public ResponseEntity<List<TourDTO>> searchToursByName(@RequestParam("name") String name) {
+        List<TourDTO> matchingTours = tourService.searchToursByName(name);
+        return ResponseEntity.ok(matchingTours);
     }
 }

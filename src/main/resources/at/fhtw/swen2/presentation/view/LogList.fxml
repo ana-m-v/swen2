@@ -6,20 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.fhtw.swen2.presentation.view.LogListView"
-            prefHeight="800.0" prefWidth="1400.0">
+            stylesheets="@LogList.css">
 <HBox>
     <children>
-        <TableView fx:id="tableViewTour" prefHeight="350.0" prefWidth="700.0">
+        <TableView fx:id="tableViewTour">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="30.0" text="Name" />
-                <TableColumn fx:id="fromColumn" prefWidth="30.0" text="From" />
-                <TableColumn fx:id="toColumn" prefWidth="30.0" text="To" />
-                <TableColumn fx:id="transportTypeColumn" prefWidth="30.0" text="Transport Type" />
-                <TableColumn fx:id="distanceColumn" prefWidth="20.0" text="Distance" />
-                <TableColumn fx:id="timeColumn" prefWidth="20.0" text="Time" />
+                <TableColumn fx:id="nameColumn" text="Name" />
+                <TableColumn fx:id="fromColumn" text="From" />
+                <TableColumn fx:id="toColumn" text="To" />
+                <TableColumn fx:id="transportTypeColumn" text="Transport Type" />
+                <TableColumn fx:id="distanceColumn" text="Distance" />
+                <TableColumn fx:id="timeColumn" text="Time" />
             </columns>
         </TableView>
     </children>
@@ -37,17 +38,25 @@
                 <Label text="Comment:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <TextField fx:id="commentTextField" prefHeight="0.0" prefWidth="75.0" />
             </children>
+            <Text fx:id="feedbackText" styleClass="feedback-text"/>
+
             <children>
-                <Button fx:id="saveLogButton" onAction="#saveLogButtonAction" text="Create New Log"></Button>
+                <Button fx:id="saveLogButton" onAction="#saveLogButtonAction">Create New Log</Button>
             </children>
             <children>
-         <TableView fx:id="tableViewLog" prefHeight="350.0" prefWidth="700.0">
+                <Button fx:id="editLogButton" onAction="#editLogButtonAction">Edit Log</Button>
+            </children>
+            <children>
+                <Button fx:id="deleteLogButton" onAction="#deleteLogButtonAction">Delete Log</Button>
+            </children>
+            <children>
+         <TableView fx:id="tableViewLog">
             <columns>
-                <TableColumn fx:id="totalTimeColumn" prefWidth="75.0" text="TotalTime" />
-                <TableColumn fx:id="dateTimeColumn" prefWidth="75.0" text="Date/Time" />
-                <TableColumn fx:id="ratingColumn" prefWidth="75.0" text="Rating 1-10" />
-                <TableColumn fx:id="difficultyColumn" prefWidth="75.0" text="Difficulty 1-10" />
-                <TableColumn fx:id="commentColumn" prefWidth="150.0" text="Comment" />
+                <TableColumn fx:id="totalTimeColumn" text="TotalTime" />
+                <TableColumn fx:id="dateTimeColumn" text="Date/Time" />
+                <TableColumn fx:id="ratingColumn" text="Rating 1-10" />
+                <TableColumn fx:id="difficultyColumn" text="Difficulty 1-10" />
+                <TableColumn fx:id="commentColumn" text="Comment" />
             </columns>
         </TableView>
             </children>

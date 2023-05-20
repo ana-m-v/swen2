@@ -2,10 +2,13 @@ package at.fhtw.swen2.presentation.viewmodel;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.persistence.entity.TourEntity;
+import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,8 @@ import java.util.Arrays;
 
 @Component
 public class TourListViewModel {
+    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080/tours";
 
@@ -42,6 +47,7 @@ public class TourListViewModel {
             tours.clear();
             tours.addAll(Arrays.asList(response.getBody()));
         } catch (RestClientException e) {
+            logger.error("Error with refreshTours() in TourListViewModel");
             e.printStackTrace();
         }
     }

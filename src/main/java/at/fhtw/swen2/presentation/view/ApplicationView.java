@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 @Slf4j
 public class ApplicationView implements Initializable, StageAware {
 
+    public Tab tab2;
+    @FXML
+    public Tab tab3;
     ApplicationEventPublisher publisher;
 
     TourListView tourListView;

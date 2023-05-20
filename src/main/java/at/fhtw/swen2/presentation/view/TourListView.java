@@ -1,5 +1,6 @@
 package at.fhtw.swen2.presentation.view;
 
+import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import at.fhtw.swen2.model.TourDTO;
@@ -16,6 +17,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +34,7 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class TourListView implements Initializable {
 
+    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
     @Autowired
     public TourListViewModel tourListViewModel;
     ListView<TourDTO> tourList = new ListView<>();
@@ -49,7 +53,11 @@ public class TourListView implements Initializable {
     private TableColumn<TourDTO, Double> distanceColumn;
     @FXML
     private TableColumn<TourDTO, String> timeColumn;
+    @FXML
+    private TableColumn<TourDTO, String> popularityColumn;
 
+    @FXML
+    private TableColumn<TourDTO, String> childFriendlyColumn;
 
     @FXML
     private ImageView tourImageView;
@@ -61,6 +69,7 @@ public class TourListView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle rb){
+        logger.info("TourListView initialized");
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("From"));
@@ -69,6 +78,8 @@ public class TourListView implements Initializable {
         distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
+        popularityColumn.setCellValueFactory(new PropertyValueFactory<>("popularity"));
+        childFriendlyColumn.setCellValueFactory(new PropertyValueFactory<>("childFriendly"));
         tableView.setItems(tourListViewModel.getTours());
 
         tableView.setOnMouseClicked(event -> {
@@ -89,6 +100,4 @@ public class TourListView implements Initializable {
         });
         tourListViewModel.refreshTours();
     }
-
-
 }

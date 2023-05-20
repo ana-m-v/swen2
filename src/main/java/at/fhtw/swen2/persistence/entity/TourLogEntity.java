@@ -115,4 +115,5 @@ public class TourLogEntity {
         this.tour = tour;
     }
 
+
 }

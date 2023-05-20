@@ -51,7 +51,7 @@ public class TourEntity {
 
     @Column(length = Integer.MAX_VALUE)
     private String routeImage;
-    @OneToMany(mappedBy = "tour")
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TourLogEntity> tourLogs;
     /*
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -178,5 +178,23 @@ public class TourEntity {
 
     public void setRouteImage(String routeImage) {
         this.routeImage = routeImage;
+    }
+
+    public int getChildFriendly() {
+        if (tourLogs != null && !tourLogs.isEmpty()) {
+            int totalDifficulty = 0;
+            for (TourLogEntity log : tourLogs) {
+                totalDifficulty += log.getDifficulty();
+            }
+            return totalDifficulty / tourLogs.size();
+        }
+        return 0;
+    }
+
+    public int getPopularity() {
+        if (tourLogs != null) {
+            return tourLogs.size();
+        }
+        return 0;
     }
 }

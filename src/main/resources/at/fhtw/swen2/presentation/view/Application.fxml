@@ -32,7 +32,7 @@
                                 <ScrollPane prefHeight="200.0" prefWidth="531.0" VBox.vgrow="ALWAYS">
                                     <content>
                                         <VBox prefHeight="200.0" prefWidth="531.0">
-<!--                                            <fx:include source="TourList.fxml" />-->
+                                            <!--                                            <fx:include source="TourList.fxml" />-->
                                             <fx:include source="NewTour.fxml" />
                                         </VBox>
                                     </content>
@@ -75,6 +75,23 @@
                                         <VBox prefHeight="1000.0" prefWidth="531.0">
                                             <!--                                            <fx:include source="TourList.fxml" />  -->
                                             <fx:include source="LogList.fxml" />
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                            </items>
+                        </SplitPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="tab3" text="%tab.search">
+                    <content>
+                        <SplitPane disable="true" dividerPositions="0.265" orientation="VERTICAL">
+                            <items>
+                                <ScrollPane prefHeight="1000.0" prefWidth="531.0" VBox.vgrow="ALWAYS" >
+                                    <content>
+                                        <VBox prefHeight="1000.0" prefWidth="531.0">
+                                            <!--                                            <fx:include source="TourList.fxml" />  -->
+                                            <fx:include source="Search.fxml" />
                                         </VBox>
                                     </content>
                                 </ScrollPane>

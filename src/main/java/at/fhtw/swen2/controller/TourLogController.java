@@ -1,5 +1,6 @@
 package at.fhtw.swen2.controller;
 
+import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import at.fhtw.swen2.service.TourLogService;
@@ -40,8 +41,13 @@ public class TourLogController {
         return tourLogService.getTourLogById(id);
     }
 
+    @GetMapping("/tours/{id}")
+    public ResponseEntity<List<TourLogDTO>> getTourLogsForTour(@PathVariable("id") Long tourId) {
+        List<TourLogDTO> tourLogs = tourLogService.getTourLogsForTour(tourId);
+        return ResponseEntity.ok(tourLogs);
+    }
     @PostMapping
-    public ResponseEntity<TourLogDTO> createTourLog(@RequestBody TourLogDTO tourLogDto) {
+    public ResponseEntity<TourLogDTO> createTourLog(@RequestParam Long tourId, @RequestBody TourLogDTO tourLogDto) {
 
         System.out.println("IN CREATE tourLog in viewmodel");
         int totalTime = tourLogDto.getTotalTime();
@@ -51,47 +57,14 @@ public class TourLogController {
         System.out.println("User input rating: " + rating);
         int difficulty = tourLogDto.getDifficulty();
         String comment = tourLogDto.getComment();
-        // replace needed for html parsing
-     //   from = from.replace(" ", "%20");
-     //   to = to.replace(" ", "%20");
-/*
-        try {
-            double distance;
-            int estimatedTime;
-            String imgUrl;
 
-            // Call getRouteInfo to get the distance and estimated time
-            Map<String, Object> routeInfo = getRouteInfo(from, to, transportType);
-            if (routeInfo != null) {
-                distance = (double) routeInfo.get("distance");
-                estimatedTime = (int) routeInfo.get("time");
-                String session = (String) routeInfo.get("session");
-                Double ulLat = (Double) routeInfo.get("ulLat");
-                Double ulLng = (Double) routeInfo.get("ulLng");
-                Double lrLat = (Double) routeInfo.get("lrLat");
-                Double lrLng = (Double) routeInfo.get("lrLng");
-
-                String ulLatString = ulLat.toString();
-                String ulLngString = ulLng.toString();
-                String lrLatString = lrLat.toString();
-                String lrLngString = lrLng.toString();
-
-                System.out.println("ULLAT " + ulLat);
-
-                imgUrl = String.format("https://www.mapquestapi.com/staticmap/v5/map?key=%s&size=600,400&boundingBox=%s,%s,%s,%s&session=%s",
-                        apiKey, ulLatString, ulLngString, lrLatString, lrLngString, session);
-                System.out.println("route info " + routeInfo);
-            } else {
-                logger.error("Error getting route information");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-            } */
 
             tourLogDto.setTotalTime(totalTime);
             tourLogDto.setDateTime(dateTime);
             tourLogDto.setRating(rating);
             tourLogDto.setDifficulty(difficulty);
             tourLogDto.setComment(comment);
-            tourLogService.createTourLog(tourLogDto);
+            tourLogService.createTourLog(tourLogDto, tourId);
             //change http
             return new ResponseEntity<>(tourLogDto, HttpStatus.CREATED);
 
@@ -102,5 +75,44 @@ public class TourLogController {
         System.out.println("in controller delete tourLog : " + id);
 
         tourLogService.deleteTourLog(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TourLogDTO> updateTourLog(@PathVariable("id") String tourLogId, @RequestBody TourLogDTO tourLogDto) {
+
+        // find that tour to be edited
+        TourLogDTO existingTourLog = tourLogService.getTourLogById(Long.valueOf(tourLogId));
+        if (existingTourLog != null) {
+            // Update the tour with the new data
+            existingTourLog.setDateTime(tourLogDto.getDateTime());
+            existingTourLog.setTotalTime(tourLogDto.getTotalTime());
+            existingTourLog.setRating(tourLogDto.getRating());
+            existingTourLog.setDifficulty(tourLogDto.getDifficulty());
+            existingTourLog.setComment(tourLogDto.getComment());
+
+            try {
+                tourLogService.updateTourLog(existingTourLog);
+
+//                return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.error("Error updating tour", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+
+            // Return a success response
+            return new ResponseEntity<>(tourLogDto, HttpStatus.OK);
+
+//            return ResponseEntity.ok("Tour updated successfully.");
+        } else {
+            // If the tour with the given ID doesn't exist, return an error response
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TourLogDTO>> searchToursByComment(@RequestParam("comment") String comment) {
+        List<TourLogDTO> matchingTourLogs = tourLogService.searchTourLogsByComment(comment);
+        return ResponseEntity.ok(matchingTourLogs);
     }
 }

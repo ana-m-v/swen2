@@ -1,0 +1,13 @@
+AnchorPane {
+    -fx-pref-height: 400px;
+    -fx-pref-width: 600px;
+}
+
+.table-view {
+    -fx-pref-height: 350px;
+    -fx-pref-width: 1000px;
+}
+
+TableColumn {
+    -fx-pref-width: 75px;
+}

@@ -9,17 +9,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
-<VBox maxHeight="-Infinity" maxWidth="300" minHeight="-Infinity" minWidth="200.0" prefWidth="200.0"
-      spacing="8.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="at.fhtw.swen2.presentation.view.TourView">
+<VBox styleClass="vbox-main" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.fhtw.swen2.presentation.view.TourView" stylesheets="@NewTour.css">
 
     <children>
-        <Label text="%tab.demo.title">
-            <font>
-                <Font size="14.0" />
-            </font>
+        <Label styleClass="demo-title-label" text="%tab.demo.title">
+<!--            <font>-->
+<!--                <Font size="14.0" />-->
+<!--            </font>-->
         </Label>
-        <Separator prefWidth="200.0" />
+        <Separator styleClass="separator"/>
         <Text text="Name"/>
         <TextField fx:id="nameTextField"/>
         <Text text="Description"/>
@@ -31,10 +30,7 @@
         <Text text="Transport"/>
         <ChoiceBox fx:id="transportTypeChoiceBox"/>
         <Button fx:id="createButton" onAction="#submitButtonAction" text="insert"/>
-        <Separator prefWidth="200.0" />
-        <Text fx:id="feedbackText" />
+        <Separator styleClass="separator" />
+        <Text fx:id="feedbackText" styleClass="feedback-text"/>
     </children>
-    <padding>
-        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-    </padding>
 </VBox>

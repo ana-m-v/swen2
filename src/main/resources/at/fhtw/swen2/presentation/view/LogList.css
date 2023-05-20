@@ -1,0 +1,33 @@
+AnchorPane {
+    -fx-pref-height: 800px;
+    -fx-pref-width: 1400px;
+}
+
+TableView {
+    -fx-pref-height: 350px;
+    -fx-pref-width: 700px;
+}
+
+TableColumn {
+    -fx-pref-width: 50px;
+}
+
+Button {
+    -fx-pref-width: 100px;
+    -fx-background-color: rgba(136, 136, 220, 0.53);
+}
+
+VBox {
+    -fx-spacing: 10px;
+    -fx-padding: 8px;
+}
+
+TextField {
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+    -fx-border-color: rgba(136, 136, 220, 0.53);
+}
+
+.feedback-text {
+    -fx-fill: red;
+}

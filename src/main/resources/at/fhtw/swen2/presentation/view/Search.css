@@ -1,0 +1,8 @@
+TableView {
+    -fx-pref-height: 350px;
+    -fx-pref-width: 750px;
+}
+
+TableColumn {
+    -fx-pref-width: 75px;
+}
