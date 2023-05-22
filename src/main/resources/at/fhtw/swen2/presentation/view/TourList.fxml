@@ -33,6 +33,15 @@
 
                 </ImageView>
             </children>
+
+        <HBox>
+            <children>
+                <Button fx:id="createTourPDFButton" onAction="#createTourPDFButtonAction" text="create PDF from tour with tour logs"></Button>
+            </children>
+            <children>
+                <Button fx:id="createTourStatisticPDFButton" onAction="#createTourStatisticPDFButtonAction" text="create PDF tour with statistics"></Button>
+            </children>
+        </HBox>
         </VBox>
 <!--        <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">-->
 <!--            <columns>-->

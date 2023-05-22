@@ -1,6 +1,6 @@
 package at.fhtw.swen2.presentation.view;
 
-import at.fhtw.swen2.presentation.Swen2ApplicationFX;
+import at.fhtw.swen2.pdfwriter.PDFWriter;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import at.fhtw.swen2.model.TourDTO;
@@ -17,8 +17,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -34,7 +32,6 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class TourListView implements Initializable {
 
-    private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
     @Autowired
     public TourListViewModel tourListViewModel;
     ListView<TourDTO> tourList = new ListView<>();
@@ -53,11 +50,7 @@ public class TourListView implements Initializable {
     private TableColumn<TourDTO, Double> distanceColumn;
     @FXML
     private TableColumn<TourDTO, String> timeColumn;
-    @FXML
-    private TableColumn<TourDTO, String> popularityColumn;
 
-    @FXML
-    private TableColumn<TourDTO, String> childFriendlyColumn;
 
     @FXML
     private ImageView tourImageView;
@@ -67,9 +60,12 @@ public class TourListView implements Initializable {
     @FXML
     public static Button editButton;
 
+    public PDFWriter pdfWriter= new PDFWriter();
+    private TourDTO tourToPdf = new TourDTO();
+
+
     @Override
     public void initialize(URL location, ResourceBundle rb){
-        logger.info("TourListView initialized");
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("From"));
@@ -78,8 +74,6 @@ public class TourListView implements Initializable {
         distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
-        popularityColumn.setCellValueFactory(new PropertyValueFactory<>("popularity"));
-        childFriendlyColumn.setCellValueFactory(new PropertyValueFactory<>("childFriendly"));
         tableView.setItems(tourListViewModel.getTours());
 
         tableView.setOnMouseClicked(event -> {
@@ -95,9 +89,30 @@ public class TourListView implements Initializable {
                     // display the image for the selected tour
                     Image tourImage = new Image(selectedTour.getRouteImage());
                     tourImageView.setImage(tourImage);
+                    //set PDF tour
+                    tourToPdf = tourListViewModel.getSelectedTour();
                 }
             }
         });
         tourListViewModel.refreshTours();
     }
+    public void createTourPDFButtonAction()  {
+        try {
+            pdfWriter.createPdfTour(tourToPdf);
+        } catch (IOException e) {
+            // Handle any exceptions that occur during PDF creation
+            e.printStackTrace();
+        }
+    }
+    public void createTourStatisticPDFButtonAction()  {
+        try {
+            pdfWriter.createPdfTourStatistic(tourToPdf);
+        } catch (IOException e) {
+            // Handle any exceptions that occur during PDF creation
+            e.printStackTrace();
+        }
+    }
+
+
+
 }
