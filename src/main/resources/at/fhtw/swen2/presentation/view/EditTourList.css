@@ -17,7 +17,7 @@ TableColumn {
 }
 
 Button {
-    -fx-pref-width: 100px;
+    -fx-pref-width: 150px;
     -fx-background-color: rgba(136, 136, 220, 0.53);
 }
 

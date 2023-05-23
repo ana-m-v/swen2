@@ -1,6 +1,8 @@
 //package at.fhtw.swen2.controller;
 //
 //import at.fhtw.swen2.model.TourDTO;
+//import at.fhtw.swen2.model.TourLogDTO;
+//
 //import at.fhtw.swen2.model.TransportType;
 //import at.fhtw.swen2.service.TourService;
 //import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +28,12 @@
 //    public void testGetAllTours() {
 //        // Create some dummy tours for testing
 //        List<TourDTO> dummyTours = new ArrayList<>();
-//        dummyTours.add(new TourDTO(1L, "Tour 1", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg"));
-//        dummyTours.add(new TourDTO(2L, "Tour 2", "bla", "Vienna", "Belgrade", TransportType.fastest, 1234, 1234, "image.jpg"));
+//        List<TourLogDTO> dummyTourLogs = new ArrayList<>();
+//
+//        dummyTours.add(new TourDTO(1L, "Tour 1", "bla", "Belgrade", "Vienna",
+//                TransportType.shortest, 1234.0, 1234, "image.jpg", 5,5, dummyTourLogs));
+//        dummyTours.add(new TourDTO(2L, "Tour 2", "bla", "Vienna", "Belgrade",
+//                TransportType.fastest, 1234.0, 1234, "image.jpg", 2, 2, dummyTourLogs));
 //
 //        // Set up the TourService to return the dummy tours
 ////        tourService.setAllTours(dummyTours);
@@ -45,7 +51,10 @@
 //    @Test
 //    public void testCreateTour() {
 //        // Create a dummy tour for testing
-//        TourDTO dummyTour = new TourDTO(3L, "Tour 3", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg");
+//        List<TourLogDTO> dummyTourLogs = new ArrayList<>();
+//
+//        TourDTO dummyTour = new TourDTO(1L, "Tour 1", "bla", "Belgrade", "Vienna",
+//                TransportType.shortest, 1234.0, 1234, "image.jpg", 5,5, dummyTourLogs);
 //
 //        // Invoke the createTour method on the controller
 //        ResponseEntity<TourDTO> response = tourController.createTour(dummyTour);
@@ -60,9 +69,9 @@
 //        assertEquals(dummyTour.getName(), createdTour.getName());
 //
 //        // Assert that the tour was added to the TourService
-////        TourDTO checkTour = tourController.getTourById(3L);
-////        assertNotNull(checkTour);
-////        assertEquals(dummyTour.getName(), checkTour.getName());
+//        TourDTO checkTour = tourController.getTourById(3L);
+//        assertNotNull(checkTour);
+//        assertEquals(dummyTour.getName(), checkTour.getName());
 //    }
 //
 //}

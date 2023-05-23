@@ -47,6 +47,8 @@
                             styleClass="button"/>
                     <Button fx:id="saveEditButton" onAction="#saveEditButtonAction" text="Edit Tour"
                             styleClass="button"/>
+                    <Button fx:id="backwardTourButton" onAction="#saveBackwardTourButtonAction" text="Create Tour backward"
+                            styleClass="button"/>
                 </VBox>
             </VBox>
 
