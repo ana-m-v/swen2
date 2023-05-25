@@ -39,7 +39,8 @@ public class TourDTO {
 
     public TourDTO(){};
 
-    public TourDTO(Long id, String name, String description, String from, String to, TransportType transportType, double distance, int time, String routeImage, int childFriendly, int popularity, List<TourLogDTO> tourLogs) {
+    public TourDTO(Long id, String name, String description, String from, String to, TransportType transportType,
+                   double distance, int time, String routeImage, int childFriendly, int popularity, List<TourLogDTO> tourLogs) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -164,10 +164,15 @@ public class EditTourListView implements Initializable {
 
         tourViewModel.updateEditedTour(tour);
     }
-    //saves edited Tour as new Tour
-    public void editEditButtonAction(ActionEvent actionEvent) {
+    //saves Tour backward
+    public void saveBackwardTourButtonAction(ActionEvent actionEvent) {
         System.out.println("editing tour id: " + tourViewModel.getId());
-        tourViewModel.saveEditTour(tourViewModel.getId());
+        String from = tourViewModel.getFrom();
+        String to = tourViewModel.getTo();
+        tourViewModel.setTo(from);
+        tourViewModel.setFrom(to);
+        tourViewModel.setName(tourViewModel.getName() + "_back");
+        tourViewModel.createTour();
 
     }
 
