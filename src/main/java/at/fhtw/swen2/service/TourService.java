@@ -2,6 +2,7 @@ package at.fhtw.swen2.service;
 
 import at.fhtw.swen2.mapper.TourMapper;
 import at.fhtw.swen2.model.TourDTO;
+import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.persistence.entity.TourLogEntity;
 import at.fhtw.swen2.persistence.repository.TourLogRepository;
@@ -97,5 +98,43 @@ public class TourService {
         }
 
         return matchingTourDTOs;
+    }
+
+    public List<TourDTO> searchQuery(String searchString) {
+        List<TourEntity> matchingTourEntities = tourRepository.findByForSearchStringContaining(searchString);
+        List<TourDTO> matchingTourDTOs = new ArrayList<>();
+
+        for (TourEntity tourEntity : matchingTourEntities) {
+            TourDTO tourDTO = new TourDTO(tourEntity);
+            System.out.println("match " + tourDTO.getName());
+            matchingTourDTOs.add(tourDTO);
+        }
+
+        return matchingTourDTOs;
+    }
+
+    public List<TourDTO> getAllToursWithLogs() {
+        List<TourEntity> tours = tourRepository.findAll();
+        List<TourDTO> tourDTOs = new ArrayList<>();
+
+        for (TourEntity tour : tours) {
+            TourDTO tourDTO = new TourDTO();
+            tourDTO.setId(tour.getId());
+            // Set other tour properties
+
+            List<TourLogDTO> tourLogDTOs = new ArrayList<>();
+            for (TourLogEntity tourLog : tour.getTourLogs()) {
+                TourLogDTO tourLogDTO = new TourLogDTO();
+                tourLogDTO.setId(tourLog.getId());
+                // Set other tour log properties
+
+                tourLogDTOs.add(tourLogDTO);
+            }
+
+            tourDTO.setTourLogs(tourLogDTOs);
+            tourDTOs.add(tourDTO);
+        }
+
+        return tourDTOs;
     }
 }

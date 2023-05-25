@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface TourRepository extends JpaRepository<TourEntity, Long> {
     List<TourEntity> findByNameContainingIgnoreCase(String name);
+
+    List<TourEntity> findByForSearchStringContaining(String searchString);
+
 }
 

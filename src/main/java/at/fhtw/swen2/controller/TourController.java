@@ -275,8 +275,14 @@ public class TourController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<TourDTO>> searchToursByName(@RequestParam("name") String name) {
-        List<TourDTO> matchingTours = tourService.searchToursByName(name);
+    public ResponseEntity<List<TourDTO>> searchToursByName(@RequestParam("forSearchString") String string) {
+        List<TourDTO> matchingTours = tourService.searchQuery(string);
         return ResponseEntity.ok(matchingTours);
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<List<TourDTO>> exportToursWithLogs() {
+        List<TourDTO> tours = tourService.getAllToursWithLogs();
+        return ResponseEntity.ok(tours);
     }
 }

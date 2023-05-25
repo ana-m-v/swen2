@@ -205,15 +205,17 @@ public class TourViewModel {
         this.routeImage.set(routeImage);
     }
 
-    public void createTour() {
+    public TourDTO createTour() {
         TourDTO tour = TourDTO.builder().name(getName()).description(getDescription()).distance(getDistance()).time(getTime()).from(getFrom()).to(getTo()).transportType(getTransportType()).routeImage(getRouteImage()).build();
         try {
             TourDTO response = restTemplate.postForObject(baseUrl, tour, TourDTO.class);
-            tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
+            tourListViewModel.getTours().add(response);
+            return response;
         } catch (RestClientException e) {
             logger.error("Error with createTour() in TourViewModel");
             e.printStackTrace();
         }
+        return null;
     }
     public void updateEditedTour(TourDTO tour) {
         try {
@@ -240,7 +242,6 @@ public class TourViewModel {
         } catch (RestClientException e) {
             e.printStackTrace();
         }
-
     }
 
     public void deleteTour(TourDTO tourDTO) {

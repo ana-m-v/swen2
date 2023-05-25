@@ -100,7 +100,6 @@ public class TourListView implements Initializable {
         try {
             pdfWriter.createPdfTour(tourToPdf);
         } catch (IOException e) {
-            // Handle any exceptions that occur during PDF creation
             e.printStackTrace();
         }
     }
@@ -108,7 +107,6 @@ public class TourListView implements Initializable {
         try {
             pdfWriter.createPdfTourStatistic(tourToPdf);
         } catch (IOException e) {
-            // Handle any exceptions that occur during PDF creation
             e.printStackTrace();
         }
     }

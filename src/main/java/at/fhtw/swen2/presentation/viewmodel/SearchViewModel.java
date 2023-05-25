@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -18,6 +19,8 @@ import java.util.List;
 @Component
 public class SearchViewModel {
 
+    @Autowired
+    TourListViewModel tourListViewModel;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseTourUrl = "http://localhost:8080/tours";
     private final String baseTourLogUrl = "http://localhost:8080/tourlogs";
@@ -62,7 +65,8 @@ public class SearchViewModel {
 
     public void search() {
         try {
-            String tourUrl = baseTourUrl + "/search?name=" + searchString.get();
+            tours.clear();
+            String tourUrl = baseTourUrl + "/search?forSearchString=" + searchString.get();
             ResponseEntity<TourDTO[]> tourResponse = restTemplate.getForEntity(tourUrl, TourDTO[].class);
             List<TourDTO> matchingTours = Arrays.asList(tourResponse.getBody());
             tours.addAll(matchingTours);

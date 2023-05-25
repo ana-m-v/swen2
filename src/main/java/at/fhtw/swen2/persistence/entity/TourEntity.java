@@ -58,6 +58,18 @@ public class TourEntity {
     @JoinColumn(name = "tour_id")
     private Set<TourLogDTO> tourLogs = new HashSet<>();   */
 
+    @Column
+    private String forSearchString;
+    @PrePersist
+    @PreUpdate
+    private void updateForSearchString() {
+        forSearchString = name + " " + description + " " + fromDestination + " " + toDestination + " " + transportType;
+    }
+
+    public String getForSearchString() {
+        return forSearchString;
+    }
+
     public TourEntity(TourDTO tourDTO) {
         this.id = tourDTO.getId();
         this.name = tourDTO.getName();

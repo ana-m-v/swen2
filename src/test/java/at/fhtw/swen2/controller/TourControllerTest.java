@@ -1,68 +1,97 @@
-//package at.fhtw.swen2.controller;
-//
-//import at.fhtw.swen2.model.TourDTO;
-//import at.fhtw.swen2.model.TransportType;
-//import at.fhtw.swen2.service.TourService;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.test.context.junit4.SpringRunner;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//@RunWith(SpringRunner.class) // or use @ExtendWith(SpringExtension.class) in JUnit 5
-//@SpringBootTest
-//class TourControllerTest {
-//    @Autowired
-//    private TourController tourController;
-//
-//    @Test
-//    public void testGetAllTours() {
-//        // Create some dummy tours for testing
-//        List<TourDTO> dummyTours = new ArrayList<>();
-//        dummyTours.add(new TourDTO(1L, "Tour 1", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg"));
-//        dummyTours.add(new TourDTO(2L, "Tour 2", "bla", "Vienna", "Belgrade", TransportType.fastest, 1234, 1234, "image.jpg"));
-//
-//        // Set up the TourService to return the dummy tours
-////        tourService.setAllTours(dummyTours);
-//
-//        // Invoke the getAllTours method on the controller
-//        List<TourDTO> result = tourController.getAllTours();
-//
-//        // Assert that the result is not null and matches the dummy tours
-//        assertNotNull(result);
-//        assertEquals(dummyTours.size(), result.size());
-//        assertEquals(dummyTours.get(0).getName(), result.get(0).getName());
-//        assertEquals(dummyTours.get(1).getName(), result.get(1).getName());
-//    }
-//
-//    @Test
-//    public void testCreateTour() {
-//        // Create a dummy tour for testing
-//        TourDTO dummyTour = new TourDTO(3L, "Tour 3", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg");
-//
-//        // Invoke the createTour method on the controller
-//        ResponseEntity<TourDTO> response = tourController.createTour(dummyTour);
-//
-//        // Assert that the response is not null and has a status of CREATED
-//        assertNotNull(response);
-//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//
-//        // Assert that the response body matches the dummy tour
-//        TourDTO createdTour = response.getBody();
-//        assertNotNull(createdTour);
-//        assertEquals(dummyTour.getName(), createdTour.getName());
-//
-//        // Assert that the tour was added to the TourService
-////        TourDTO checkTour = tourController.getTourById(3L);
-////        assertNotNull(checkTour);
-////        assertEquals(dummyTour.getName(), checkTour.getName());
-//    }
-//
-//}
+package at.fhtw.swen2.controller;
+
+import at.fhtw.swen2.model.TourDTO;
+import at.fhtw.swen2.model.TransportType;
+import at.fhtw.swen2.persistence.entity.TourEntity;
+import at.fhtw.swen2.service.TourService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class TourControllerTest {
+
+    private static final String BASE_URL = "http://localhost:8080/tours";
+    private RestTemplate restTemplate;
+
+    @BeforeEach
+    public void setUp() {
+        restTemplate = new RestTemplate();
+    }
+
+    @Test
+    public void createTour_Successful() {
+        // Arrange
+        TourDTO tour = new TourDTO(1L, "Tour 1", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
+
+        TourDTO response = restTemplate.postForObject(BASE_URL, tour, TourDTO.class);
+        assertEquals(tour.getName(), response.getName());
+    }
+
+    @Test
+    public void createTour_ExceptionThrown() {
+        assertThrows(RestClientException.class, () -> restTemplate.postForObject(BASE_URL, null, TourDTO.class));
+    }
+    @Test
+    public void updateEditedTour_ValidTour_ReturnsOkStatus() {
+        // Arrange
+        long tourId = 6L;
+        TourDTO tourDTO = new TourDTO();
+        // Set properties of the tour object
+        tourDTO.setName("Updated");
+        tourDTO.setDescription("test");
+        tourDTO.setFrom("Oslo");
+        tourDTO.setTo("Malme");
+        tourDTO.setTransportType(TransportType.shortest);
+        // Act & Assert
+        assertDoesNotThrow(() -> restTemplate.put(BASE_URL + "/" + tourId, tourDTO));
+    }
+
+    @Test
+    public void updateEditedTour_NonExistingTour_ReturnsNotFoundStatus() {
+        // Arrange
+        long tourId = 999L;
+        TourDTO tourDTO = new TourDTO();
+        tourDTO.setName("Updated");
+        tourDTO.setDescription("test");
+        tourDTO.setFrom("Oslo");
+        tourDTO.setTo("Malme");
+        tourDTO.setTransportType(TransportType.shortest);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                restTemplate.put(BASE_URL + "/" + tourId, tourDTO));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    public void deleteTour_NonExistingTour_ReturnsNotFoundStatus() {
+        // Arrange
+        long tourId = 999L;
+        TourDTO tourDTO = new TourDTO();
+        tourDTO.setName("Updated");
+        tourDTO.setDescription("test");
+        tourDTO.setFrom("Oslo");
+        tourDTO.setTo("Malme");
+        tourDTO.setTransportType(TransportType.shortest);
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                restTemplate.put(BASE_URL + "/" + tourId, tourDTO));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+}

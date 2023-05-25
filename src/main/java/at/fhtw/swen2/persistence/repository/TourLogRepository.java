@@ -9,7 +9,6 @@ import java.util.List;
 public interface TourLogRepository extends JpaRepository<TourLogEntity, Long> {
     void deleteByTourId(Long tourId);
     List<TourLogEntity> findByTourId(Long tourId);
-
     List<TourLogEntity> findByCommentContainingIgnoreCase(String comment);
 }
 
