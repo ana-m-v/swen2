@@ -46,6 +46,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 @Component
 @Scope("prototype")
 public class LogListView implements Initializable {

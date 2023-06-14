@@ -52,7 +52,6 @@ public class TourLogController {
         System.out.println("IN CREATE tourLog in viewmodel");
         int totalTime = tourLogDto.getTotalTime();
         Timestamp dateTime = tourLogDto.getDateTime();
-        // Validate user input, maybe put in class later on, replaces everything except listed chars
         int rating = tourLogDto.getRating();
         System.out.println("User input rating: " + rating);
         int difficulty = tourLogDto.getDifficulty();
