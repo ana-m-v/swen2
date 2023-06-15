@@ -5,6 +5,7 @@ import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TourLogDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.control.Alert;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,11 +23,18 @@ public class JSONConverter {
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         String timestamp = currentTime.format(formatter);
-        FileWriter file = new FileWriter("src/main/java/at/fhtw/swen2/JSONconverter/JSONFiles/tours_" + timestamp + ".json");
+      //  String filename =
+        FileWriter file = new FileWriter("src/main/java/at/fhtw/swen2/jsonConverter/JSONFiles/tours_" + timestamp + ".json");
         file.write(tours);
         file.write("\n");
         file.write(tourLogs);
         file.close();
+        //user feedback
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("JSON File created");
+        alert.setHeaderText(null);
+        alert.setContentText("JSON file generated successfully! \nView: src/main/java/at/fhtw/swen2/jsonConverter/JSONFiles/");
+        alert.showAndWait();
     }
         //
     public void importJSONFile(String filename) throws JsonProcessingException {
