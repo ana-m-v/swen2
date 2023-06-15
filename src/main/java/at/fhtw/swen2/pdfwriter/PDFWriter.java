@@ -153,12 +153,9 @@ public class PDFWriter {
 
         //Initialize PDF writer
         PdfWriter writer = new PdfWriter(dest);
-        //new PDFWriter().createPdf(dest);
 
-        //Initialize PDF document
         PdfDocument pdfDoc = new PdfDocument(writer);
 
-        // Initialize document
         Document document = new Document(pdfDoc);
 
 

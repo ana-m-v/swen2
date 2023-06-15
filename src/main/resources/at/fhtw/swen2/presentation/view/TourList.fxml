@@ -30,18 +30,25 @@
             </children>
             <children>
                 <ImageView fx:id="tourImageView">
-
                 </ImageView>
             </children>
 
-        <HBox>
-            <children>
-                <Button fx:id="createTourPDFButton" onAction="#createTourPDFButtonAction" text="create PDF from tour with tour logs"></Button>
-            </children>
-            <children>
-                <Button fx:id="createTourStatisticPDFButton" onAction="#createTourStatisticPDFButtonAction" text="create PDF tour with statistics"></Button>
-            </children>
-        </HBox>
+            <HBox>
+                <children>
+                    <Button fx:id="createTourPDFButton" onAction="#createTourPDFButtonAction" text="create PDF from tour with tour logs"></Button>
+                </children>
+                <children>
+                    <Button fx:id="createTourStatisticPDFButton" onAction="#createTourStatisticPDFButtonAction" text="create PDF tour with statistics"></Button>
+                </children>
+            </HBox>
+            <HBox>
+                <children>
+                    <Button fx:id="exportToursButton" onAction="#exportToursButtonAction" text="export Tours to Json File"></Button>
+                </children>
+                <children>
+                    <Button fx:id="importToursButton" onAction="#importToursButtonAction" text="import Tours from Json File"></Button>
+                </children>
+            </HBox>
         </VBox>
 <!--        <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">-->
 <!--            <columns>-->

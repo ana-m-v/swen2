@@ -1,11 +1,16 @@
 package at.fhtw.swen2.presentation.view;
 
+import at.fhtw.swen2.jsonConverter.JSONConverter;
+import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.pdfwriter.PDFWriter;
+
+import at.fhtw.swen2.presentation.viewmodel.TourLogListViewModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
@@ -14,8 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -35,6 +39,8 @@ public class TourListView implements Initializable {
     @Autowired
     public TourListViewModel tourListViewModel;
     ListView<TourDTO> tourList = new ListView<>();
+    @Autowired
+    public TourLogListViewModel tourLogListViewModel;
     @FXML
     public TableView tableView = new TableView<>();
 
@@ -62,6 +68,8 @@ public class TourListView implements Initializable {
 
     public PDFWriter pdfWriter= new PDFWriter();
     private TourDTO tourToPdf = new TourDTO();
+
+    public JSONConverter jsonConverter = new JSONConverter();
 
 
     @Override
@@ -111,6 +119,25 @@ public class TourListView implements Initializable {
         }
     }
 
+    public void importToursButtonAction() throws JsonProcessingException {
+        try {
+            jsonConverter.importJSONFile("abc");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void exportToursButtonAction() throws IOException {
+        List<TourDTO> tourList = tourListViewModel.getTours();
+        String jsonTours = new ObjectMapper().writeValueAsString(tourList);
+        System.out.println(jsonTours);
+        List<TourLogDTO> tourLogList = tourLogListViewModel.getTourLogs();
+        String jsonTourLogs = new ObjectMapper().writeValueAsString(tourLogList);
+        try {
+            jsonConverter.writeJSONFile(jsonTours, jsonTourLogs);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
 }
