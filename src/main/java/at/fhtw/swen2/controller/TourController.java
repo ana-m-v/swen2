@@ -280,6 +280,16 @@ public class TourController {
         return ResponseEntity.ok(matchingTours);
     }
 
+    @GetMapping("/saveaspdf/{id}")
+    public TourDTO createPDF(@PathVariable Long id) {
+        return tourService.getTourById(id);
+    }
+
+    @GetMapping("/createstats")
+    public List<TourDTO> createPDFStatistic() {
+        return tourService.getAllTours();
+    }
+
     @GetMapping("/export")
     public ResponseEntity<List<TourDTO>> exportToursWithLogs() {
         List<TourDTO> tours = tourService.getAllToursWithLogs();

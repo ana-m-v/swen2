@@ -37,9 +37,9 @@ public class TourLogControllerTest {
     }
 
     @Test
-    public void createTourWithLog_Successful() {
+    public void createTourLog_Successful() {
         // create Tour to attach Log
-        TourDTO tour = new TourDTO(0L, "Tour for Logs", "bla", "Innsbruck", "London", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
+        TourDTO tour = new TourDTO(0L, "Tour for Logs", "created tour log test", "Innsbruck", "London", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
 
         TourDTO response = restTemplate.postForObject(BASE_URL, tour, TourDTO.class);
         assertEquals(tour.getName(), response.getName());
@@ -47,8 +47,20 @@ public class TourLogControllerTest {
         TourLogDTO tourLog = new TourLogDTO(0L, Timestamp.valueOf("2022-09-01 09:01:15"), "that was magical", 7, 1200, 10);
         assertDoesNotThrow(() -> restTemplate.postForObject(BASE_LOG_URL+"?tourId=" + response.getId(), tourLog, TourLogDTO.class));
     }
+
     @Test
-    public void deleteLogAndTour_Successful() {
+    public void createTourLog_TourNotExist_NotSuccessful() {
+        TourLogDTO tourLog = new TourLogDTO(0L, Timestamp.valueOf("2022-09-01 09:01:15"), "that was magical", 7, 1200, 10);
+        assertThrows(RestClientException.class, () -> restTemplate.postForObject(BASE_LOG_URL+"?tourId=" + 99999, tourLog, TourDTO.class));
+    }
+
+    @Test
+    public void createTourLog_TourLogNull_ExceptionThrown() {
+        //send empty log -> fail
+        assertThrows(RestClientException.class, () -> restTemplate.postForObject(BASE_LOG_URL, null, TourDTO.class));
+    }
+    @Test
+    public void deleteTourLog_Successful() {
         // create Tour to attach Log
         TourDTO tour = new TourDTO(0L, "Tour for Logs", "bla", "Innsbruck", "London", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
 
@@ -64,20 +76,27 @@ public class TourLogControllerTest {
     }
 
     @Test
-    public void createLog_ExceptionThrown() {
-        //send empty log -> fail
-        assertThrows(RestClientException.class, () -> restTemplate.postForObject(BASE_LOG_URL, null, TourDTO.class));
-    }
-    @Test
-    public void updateEditedTourLog_ValidTour_ReturnsOkStatus() {
+    public void updateTourLog_ReturnsOkStatus() {
         // create Tour to attach Log
         TourDTO tour = new TourDTO(0L, "Tour for Logs", "bla", "Innsbruck", "London", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
 
         TourDTO response = restTemplate.postForObject(BASE_URL, tour, TourDTO.class);
         assertEquals(tour.getName(), response.getName());
+
         //create Log
-        TourLogDTO tourLog = new TourLogDTO(399L, Timestamp.valueOf("2022-09-01 09:01:15"), "that was magical", 7, 1200, 10);
-        assertDoesNotThrow(() -> restTemplate.postForObject(BASE_LOG_URL+"?tourId=" + response.getId(), tourLog, TourLogDTO.class));
+        TourLogDTO tourLog = new TourLogDTO();
+        tourLog.setDateTime(Timestamp.valueOf("2022-09-01 09:01:15"));
+        tourLog.setComment("that was magical");
+        tourLog.setTotalTime(3444);
+        tourLog.setDifficulty(7);
+        tourLog.setRating(10);
+
+        // Add the tour log for the tour
+
+        TourLogDTO tourLogResponse = restTemplate.postForObject(BASE_LOG_URL+"?tourId=" + response.getId(), tourLog, TourLogDTO.class);
+        assert tourLogResponse != null;
+        System.out.println("update tourlog response comment " + tourLogResponse.getComment());
+
         //set properties of the Log to edit
         tourLog.setComment("updated comment");
         tourLog.setDifficulty(8);
@@ -85,7 +104,10 @@ public class TourLogControllerTest {
         tourLog.setTotalTime(4312);
        // tourLog.setDateTime(Timestamp.valueOf("2022-09-01 09:01:15"));
         // edit Log
-        assertDoesNotThrow(() -> restTemplate.put(BASE_LOG_URL + "/399", tourLog,TourLogDTO.class));
+        assertDoesNotThrow(() -> {
+            assert tourLogResponse != null;
+            restTemplate.put(BASE_LOG_URL + "/" + tourLogResponse.getId(), tourLog,TourLogDTO.class);
+        });
     }
 }
 

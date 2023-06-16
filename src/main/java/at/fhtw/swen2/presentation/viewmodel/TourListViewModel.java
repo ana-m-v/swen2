@@ -1,6 +1,7 @@
 package at.fhtw.swen2.presentation.viewmodel;
 
 import at.fhtw.swen2.model.TourDTO;
+import at.fhtw.swen2.pdfwriter.PDFWriter;
 import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
 import javafx.beans.property.ObjectProperty;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 
 @Component
@@ -63,6 +66,32 @@ public class TourListViewModel {
             tours.remove(tourDTO);
         } catch (RestClientException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void createPDF(TourDTO tourToPdf) {
+        try {
+            TourDTO responseTour = restTemplate.getForObject(baseUrl +"/saveaspdf/" + tourToPdf.getId(), TourDTO.class);
+            PDFWriter pdfWriter = new PDFWriter();
+            assert responseTour != null;
+            pdfWriter.createPdfTour(responseTour);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createPDFStatistic() {
+        try {
+            TourDTO[] responseTours = restTemplate.getForObject(baseUrl + "/createstats", TourDTO[].class);
+            PDFWriter pdfWriter = new PDFWriter();
+            assert responseTours != null;
+            pdfWriter.createPdfTourStatistic(responseTours);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

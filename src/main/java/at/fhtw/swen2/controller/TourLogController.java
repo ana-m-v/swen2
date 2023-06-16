@@ -63,6 +63,7 @@ public class TourLogController {
             tourLogDto.setRating(rating);
             tourLogDto.setDifficulty(difficulty);
             tourLogDto.setComment(comment);
+
             tourLogService.createTourLog(tourLogDto, tourId);
             //change http
             return new ResponseEntity<>(tourLogDto, HttpStatus.CREATED);

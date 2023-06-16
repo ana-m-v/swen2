@@ -105,18 +105,21 @@ public class TourListView implements Initializable {
         tourListViewModel.refreshTours();
     }
     public void createTourPDFButtonAction()  {
-        try {
-            pdfWriter.createPdfTour(tourToPdf);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+            tourListViewModel.createPDF(tourToPdf);
+//            pdfWriter.createPdfTour(tourToPdf);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
     public void createTourStatisticPDFButtonAction()  {
-        try {
-            pdfWriter.createPdfTourStatistic(tourToPdf);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        tourListViewModel.createPDFStatistic();
+//
+//        try {
+//            pdfWriter.createPdfTourStatistic(tourToPdf);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void importToursButtonAction() throws JsonProcessingException {

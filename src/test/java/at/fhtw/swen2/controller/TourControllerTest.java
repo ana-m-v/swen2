@@ -36,15 +36,16 @@ public class TourControllerTest {
     @Test
     public void createTour_Successful() {
         // Arrange
-        TourDTO tour = new TourDTO(0L, "Tour 1", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
+        TourDTO tour = new TourDTO(0L, "Create Tour Success", "bla", "Belgrade", "Vienna", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
 
         TourDTO response = restTemplate.postForObject(BASE_URL, tour, TourDTO.class);
+        System.out.println("create tour succ tour id " + response.getId());
         assertEquals(tour.getName(), response.getName());
     }
     @Test
     public void createTour_ReturnsInternalServerError() {
         // integer as destination and starting point should fail
-        TourDTO tour = new TourDTO(0L, "Tour 1", "bla", "123", "456", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
+        TourDTO tour = new TourDTO(0L, "Create Tour Internal Error", "bla", "123", "456", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
         HttpStatusCodeException exception = assertThrows(HttpStatusCodeException.class, () ->
                 restTemplate.postForObject(BASE_URL, tour, TourDTO.class));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
@@ -55,9 +56,12 @@ public class TourControllerTest {
         assertThrows(RestClientException.class, () -> restTemplate.postForObject(BASE_URL, null, TourDTO.class));
     }
     @Test
-    public void updateEditedTour_ValidTour_ReturnsOkStatus() {
+    public void updateTour_ReturnsOkStatus() {
         // Arrange
-        long tourId = 4L;
+        TourDTO tourDTOtest = new TourDTO(0L, "Update Tour Return Ok", "bla", "Bonn", "Wien", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
+        TourDTO response = restTemplate.postForObject(BASE_URL, tourDTOtest, TourDTO.class);
+
+//        long tourId = 4L;
         TourDTO tourDTO = new TourDTO();
         // Set properties of the tour object
         tourDTO.setName("Updated");
@@ -66,11 +70,15 @@ public class TourControllerTest {
         tourDTO.setTo("Malme");
         tourDTO.setTransportType(TransportType.shortest);
         // Act & Assert
-        assertDoesNotThrow(() -> restTemplate.put(BASE_URL + "/" + tourId, tourDTO));
+        assertDoesNotThrow(() -> {
+            assert response != null;
+            restTemplate.put(BASE_URL + "/" + response.getId(), tourDTO);
+        });
     }
 
+
     @Test
-    public void updateEditedTour_NonExistingTour_ReturnsNotFoundStatus() {
+    public void updateTour_NonExistingTour_ReturnsNotFoundStatus() {
         // Arrange
         long tourId = 999L;
         TourDTO tourDTO = new TourDTO();
@@ -103,14 +111,14 @@ public class TourControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
     @Test
-    public void create_deleteTour_Successful() {
+    public void deleteTour_Successful() {
         // create tour success
         TourDTO tour = new TourDTO(0L, "Tour to Delete", "bla", "Bonn", "Wien", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
 
         TourDTO response = restTemplate.postForObject(BASE_URL, tour, TourDTO.class);
         assertEquals(tour.getName(), response.getName());
         //delete tour
-        assertDoesNotThrow(() ->  restTemplate.put(BASE_URL + "/" + response.getId(), tour));
+        assertDoesNotThrow(() ->  restTemplate.delete(BASE_URL + "/" + response.getId()));
     }
 
 }

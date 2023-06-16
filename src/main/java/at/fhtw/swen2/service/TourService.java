@@ -57,11 +57,9 @@ public class TourService {
             tour.setFrom(tourDTO.getFrom());
             tour.setTo(tourDTO.getTo());
             tour.setTransportType(tourDTO.getTransportType());
-//            tour.getTourLogs().clear();
             tour = tourRepository.save(tour);
             List<TourLogEntity> tourLogs = tour.getTourLogs();
             tourLogRepository.deleteAll(tourLogs);
-//            tourLogRepository.deleteByTourId(tour.getId());
             tourDTO.setId(tour.getId());
         }
         return tourDTO;

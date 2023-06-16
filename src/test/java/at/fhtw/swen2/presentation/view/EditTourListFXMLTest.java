@@ -43,9 +43,9 @@ public class EditTourListFXMLTest extends GuiTest {
             parent = FXMLLoader.load(getClass().getResource("EditTourList.fxml"));
             return parent;
         } catch (IOException ex) {
-            //to do
+            ex.printStackTrace();
+            return null;
         }
-        return parent;
     }
     @BeforeAll
     public static void setupSpec() throws Exception {
@@ -65,7 +65,7 @@ public class EditTourListFXMLTest extends GuiTest {
     @Test
     public void testEditTourListView() throws Exception {
         // Load the FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditTourList.fxml"));
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditTourList.fxml"));
         Parent root = getRootNode();
 
         // Get references to UI elements

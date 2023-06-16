@@ -9,5 +9,4 @@ class Swen2ApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

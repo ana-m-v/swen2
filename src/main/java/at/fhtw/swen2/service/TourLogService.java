@@ -57,7 +57,7 @@ public class TourLogService {
         // Set other properties of tourLogEntity from tourLogDto
 
         TourLogEntity savedTourLogEntity = tourLogRepository.save(tourLogEntity);
-
+        tourLogDto.setId(savedTourLogEntity.getId());
         return new TourLogDTO(savedTourLogEntity);
         // Map savedTourLogEntity to TourLogDto and return it
     }

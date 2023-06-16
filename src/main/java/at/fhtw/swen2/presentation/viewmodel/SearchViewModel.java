@@ -71,7 +71,7 @@ public class SearchViewModel {
             List<TourDTO> matchingTours = Arrays.asList(tourResponse.getBody());
             tours.addAll(matchingTours);
 
-            String tourLogUrl = baseTourLogUrl + "/search?comment=" + searchString.get();
+            String tourLogUrl = baseTourLogUrl + "/search?forSearchString=" + searchString.get();
             ResponseEntity<TourLogDTO[]> tourLogResponse = restTemplate.getForEntity(tourLogUrl, TourLogDTO[].class);
             List<TourLogDTO> matchingTourLogs = Arrays.asList(tourLogResponse.getBody());
             tourLogs.addAll(matchingTourLogs);

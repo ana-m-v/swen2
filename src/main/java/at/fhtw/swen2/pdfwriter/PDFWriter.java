@@ -25,6 +25,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import org.springframework.stereotype.Component;
 
 import javax.swing.text.StyleConstants;
 import java.io.File;
@@ -32,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 
+@Component
 public class PDFWriter {
 
     String path = "pdfwriter/pdfcreated/";
@@ -108,7 +110,7 @@ public class PDFWriter {
         tourLogListViewModel.refreshTourLogs();
         tourLogs = tourLogListViewModel.getTourLogs();
         // Iterate over the tourList and extract the desired information
-        for (TourLogDTO tourLog : tourLogs) {
+        for (TourLogDTO tourLog : tour.getTourLogs()) {
             System.out.println("tourLog attached: " + tourLog.getComment());
             String tourLogInfo = "\nTotal Time: " + tourLog.getTotalTime() +
                     "\nDate/Time: " + tourLog.getDateTime() +
@@ -137,7 +139,7 @@ public class PDFWriter {
         alert.setContentText("PDF generated successfully! \nView: /SVEN2-routePlanner/swen2/" + path + filename);
         alert.showAndWait();
     }
-    public void createPdfTourStatistic(TourDTO tour) throws IOException, FileNotFoundException {
+    public void createPdfTourStatistic(TourDTO[] tour) throws IOException, FileNotFoundException {
         // Get the current timestamp
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -146,7 +148,7 @@ public class PDFWriter {
 
         // Format the current timestamp as a string
         String timestampString = currentTime.format(formatter);
-        String dest = path + tour.getId() + "_" + tour.getName() + "_statistic_"+ timestampString + ".pdf";
+        String dest = path +  "_statistic_" + timestampString + ".pdf";
         System.out.println("PDFwriter activated");
         File file = new File(dest);
         file.getParentFile().mkdirs();
@@ -162,21 +164,22 @@ public class PDFWriter {
         // Add a Paragraph
         document.add(new Paragraph("Your selected Tour:"));
         // Create a List
+        for(TourDTO singleTour : tour){
         List list = new List()
                 .setSymbolIndent(12)
                 .setListSymbol("\u2022");
 
         // Add ListItem objects
-        list.add(new ListItem("Name: " +tour.getName()))
-                .add(new ListItem("Description: " +tour.getDescription()))
-                .add(new ListItem("From: " + tour.getFrom()))
-                .add(new ListItem("To: " + tour.getTo()))
-                .add(new ListItem("Distance: "+ tour.getDistance()))
-                .add(new ListItem("Time: "+ tour.getTime()))
-                .add(new ListItem("Transport Type: "+ tour.getTransportType()));
+        list.add(new ListItem("Name: " + singleTour.getName()))
+                .add(new ListItem("Description: " + singleTour.getDescription()))
+                .add(new ListItem("From: " + singleTour.getFrom()))
+                .add(new ListItem("To: " + singleTour.getTo()))
+                .add(new ListItem("Distance: " + singleTour.getDistance()))
+                .add(new ListItem("Time: " + singleTour.getTime()))
+                .add(new ListItem("Transport Type: " + singleTour.getTransportType()));
         document.add(list);
         // add the image
-        String imageUrl = tour.getRouteImage();
+        String imageUrl = singleTour.getRouteImage();
 
         // Create an ImageData object from the URL
         ImageData imageData = ImageDataFactory.create(imageUrl);
@@ -198,7 +201,7 @@ public class PDFWriter {
         double rating;
         double difficulty;
         int counter = 0;
-        for (TourLogDTO tourLog : tourLogs) {
+        for (TourLogDTO tourLog : singleTour.getTourLogs()) {
             System.out.println("tourLog attached: " + tourLog.getComment());
             countTotalTime += tourLog.getTotalTime();
             countRating += tourLog.getRating();
@@ -217,8 +220,10 @@ public class PDFWriter {
         statisticList.add(new ListItem("Total Time on average: " + totalTime))
                 .add(new ListItem("Rating 1-10 on average: " + rating))
                 .add(new ListItem("Difficulty on average: " + difficulty))
-                .add(new ListItem("To: " + tour.getTo()));
+                .add(new ListItem("To: " + singleTour.getTo()));
         document.add(statisticList);
+
+    }
         //Close document
         document.close();
         //user feedback
