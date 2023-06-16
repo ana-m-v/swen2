@@ -33,22 +33,22 @@
                 </ImageView>
             </children>
 
-            <HBox>
+            <VBox>
                 <children>
-                    <Button fx:id="createTourPDFButton" onAction="#createTourPDFButtonAction" text="create PDF from tour with tour logs"></Button>
+                    <Button fx:id="createTourPDFButton" onAction="#createTourPDFButtonAction" text="PDF single tour"></Button>
                 </children>
                 <children>
-                    <Button fx:id="createTourStatisticPDFButton" onAction="#createTourStatisticPDFButtonAction" text="create PDF tour with statistics"></Button>
+                    <Button fx:id="createTourStatisticPDFButton" onAction="#createTourStatisticPDFButtonAction" text="PDF all tours and stats"></Button>
                 </children>
-            </HBox>
-            <HBox>
+            </VBox>
+            <VBox>
                 <children>
-                    <Button fx:id="exportToursButton" onAction="#exportToursButtonAction" text="export Tours to Json File"></Button>
+                    <Button fx:id="exportToursButton" onAction="#exportToursButtonAction" text="export tours to Json File"></Button>
                 </children>
                 <children>
-                    <Button fx:id="importToursButton" onAction="#importToursButtonAction" text="import Tours from Json File"></Button>
+                    <Button fx:id="importToursButton" onAction="#importToursButtonAction" text="import tours from Json File"></Button>
                 </children>
-            </HBox>
+            </VBox>
         </VBox>
 <!--        <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">-->
 <!--            <columns>-->

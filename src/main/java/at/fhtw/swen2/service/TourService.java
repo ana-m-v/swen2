@@ -65,19 +65,22 @@ public class TourService {
         return tourDTO;
     }
 
-    public void deleteTour(Long id) {
-        System.out.println("in service delete : " + id);
-
-        tourRepository.deleteById(id);
+    public boolean deleteTour(Long id) {
+        Optional<TourEntity> tour = tourRepository.findById(id);
+        if (tour.isPresent()) {
+            tourRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<TourDTO> searchQuery(String searchString) {
-        List<TourEntity> matchingTourEntities = tourRepository.findByForSearchStringContaining(searchString);
+        List<TourEntity> matchingTourEntities = tourRepository.findByForSearchStringContainingIgnoreCase(searchString);
         List<TourDTO> matchingTourDTOs = new ArrayList<>();
 
         for (TourEntity tourEntity : matchingTourEntities) {
             TourDTO tourDTO = new TourDTO(tourEntity);
-            System.out.println("match " + tourDTO.getName());
             matchingTourDTOs.add(tourDTO);
         }
         return matchingTourDTOs;

@@ -40,15 +40,11 @@ public class TourLogService {
         TourLogEntity tourLogEntity = new TourLogEntity(tourLogDto);
         tourLogEntity.setTour(tour);
 
-        // Set other properties of tourLogEntity from tourLogDto
-
         TourLogEntity savedTourLogEntity = tourLogRepository.save(tourLogEntity);
         tourLogDto.setId(savedTourLogEntity.getId());
         return new TourLogDTO(savedTourLogEntity);
-        // Map savedTourLogEntity to TourLogDto and return it
     }
     public void deleteTourLog(Long id) {
-        System.out.println("in service delete tour log: " + id);
         tourLogRepository.deleteById(id);
     }
 
@@ -56,23 +52,21 @@ public class TourLogService {
 
         System.out.println("in service update tourLog");
 
-        // Check if the tour log already exists in the database
+        // exists in db
         Optional<TourLogEntity> optionalTourLog = tourLogRepository.findById(existingTourLog.getId());
 
         if (optionalTourLog.isPresent()) {
             TourLogEntity tourLog = optionalTourLog.get();
 
-            // Update the existing tour log with the new data
+            // update the existing tour log
             tourLog.setDateTime(existingTourLog.getDateTime());
             tourLog.setTotalTime(existingTourLog.getTotalTime());
             tourLog.setDifficulty(existingTourLog.getDifficulty());
             tourLog.setRating(existingTourLog.getRating());
             tourLog.setComment(existingTourLog.getComment());
 
-            // Save the updated tour log entity
             tourLog = tourLogRepository.save(tourLog);
 
-            // Set the id of the DTO object
             existingTourLog.setId(tourLog.getId());
 
             return existingTourLog;
@@ -84,13 +78,9 @@ public class TourLogService {
 
 
     public List<TourLogDTO> getTourLogsForTour(Long tourId) {
-        // Implement the logic to fetch tour logs for the given tourId from your data source
-        // Return the retrieved tour logs as a list of TourLogDTO objects
-
-        // Assuming you have a data access object (DAO) or repository to interact with the data source
         List<TourLogEntity> tourLogs = tourLogRepository.findByTourId(tourId);
 
-        // Convert TourLog objects to TourLogDTO objects
+        // convert TourLog objects to TourLogDTO objects
         List<TourLogDTO> tourLogDTOs = new ArrayList<>();
         for (TourLogEntity tourLog : tourLogs) {
             TourLogDTO tourLogDTO = new TourLogDTO(tourLog);

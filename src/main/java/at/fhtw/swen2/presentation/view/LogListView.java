@@ -154,8 +154,8 @@ public class LogListView implements Initializable {
                 }
             }
         });
-        tourListViewModel.refreshTours();
-        tourLogListViewModel.refreshTourLogs();
+//        tourListViewModel.refreshTours();
+//        tourLogListViewModel.refreshTourLogs();
     }
 
     public void saveLogButtonAction(ActionEvent actionEvent) {

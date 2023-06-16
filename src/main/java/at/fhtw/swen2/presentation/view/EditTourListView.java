@@ -111,11 +111,11 @@ public class EditTourListView implements Initializable {
                 }
             }
         });
-        tourListViewModel.refreshTours();
+//        tourListViewModel.refreshTours();
     }
     //edit Tour (update row in db)
     public void saveEditButtonAction(ActionEvent actionEvent) {
-        if (nameEditTextField.getText() == null || descriptionEditTextField.getText() == null || fromEditTextField.getText() == null || toEditTextField.getText() == null || transportTypeChoiceBox.getValue() == null) {
+        if (nameEditTextField.getText() == null || descriptionEditTextField.getText() == null || fromEditTextField.getText() == null || toEditTextField.getText() == null || transportTypeChoiceBox.getValue() == null || nameEditTextField.getText().isEmpty() || descriptionEditTextField.getText().isEmpty() || fromEditTextField.getText().isEmpty() || toEditTextField.getText().isEmpty()) {
             feedbackText.setText("All of the fields must be filled out.");
             logger.warn("Empty fields in Create New Tour Form");
             return;

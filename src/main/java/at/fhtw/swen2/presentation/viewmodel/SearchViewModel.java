@@ -55,6 +55,7 @@ public class SearchViewModel {
         try {
             tours.clear();
             String tourUrl = baseTourUrl + "/search?forSearchString=" + searchString.get();
+            System.out.println("url for search tour " + tourUrl);
             ResponseEntity<TourDTO[]> tourResponse = restTemplate.getForEntity(tourUrl, TourDTO[].class);
             List<TourDTO> matchingTours = Arrays.asList(tourResponse.getBody());
             tours.addAll(matchingTours);

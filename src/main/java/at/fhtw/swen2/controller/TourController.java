@@ -2,6 +2,7 @@ package at.fhtw.swen2.controller;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
+import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.service.TourService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -26,17 +27,34 @@ public class TourController {
 
     @Autowired
     private TourService tourService;
+    @Autowired
+    TourListViewModel tourListViewModel;
     private Logger logger = LoggerFactory.getLogger(Swen2ApplicationFX.class);
     private final String apiKey = "7qYmV178joYFWTKkfBejFaCYjjAJ0b90";
 
     @GetMapping
-    public List<TourDTO> getAllTours() {
-        return tourService.getAllTours();
+    public ResponseEntity<List<TourDTO>> getAllTours() {
+        try {
+            List<TourDTO> tours = tourService.getAllTours();
+            return ResponseEntity.ok(tours);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/{id}")
-    public TourDTO getTourById(@PathVariable Long id) {
-        return tourService.getTourById(id);
+    public ResponseEntity<TourDTO> getTourById(@PathVariable Long id) {
+        try {
+            TourDTO tourDto = tourService.getTourById(id);
+            if (tourDto != null) {
+                return ResponseEntity.ok(tourDto);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving tour", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping
@@ -87,7 +105,7 @@ public class TourController {
             tourDto.setRouteImage(imgUrl);
 
             tourService.createTour(tourDto);
-
+            tourListViewModel.refreshTours();
             return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Error creating tour", e);
@@ -102,14 +120,13 @@ public class TourController {
         // find that tour to be edited
         TourDTO existingTour = tourService.getTourById(Long.valueOf(tourId));
         if (existingTour != null) {
-            // Update the tour with the new data
+            // update the tour with the new data
             existingTour.setName(tourDto.getName());
             existingTour.setDescription(tourDto.getDescription());
             existingTour.setFrom(tourDto.getFrom());
             existingTour.setTo(tourDto.getTo());
-            // Update other properties new map
 
-            System.out.println("IN CREATE in viewmodel");
+            // update other properties new map
             String transportType = valueOf(tourDto.getTransportType());
             String from = tourDto.getFrom();
             String to = tourDto.getTo();
@@ -143,7 +160,6 @@ public class TourController {
 
                     imgUrl = String.format("https://www.mapquestapi.com/staticmap/v5/map?key=%s&size=600,400&boundingBox=%s,%s,%s,%s&session=%s",
                             apiKey, ulLatString, ulLngString, lrLatString, lrLngString, session);
-                    System.out.println("route info " + routeInfo);
                 } else {
                     logger.error("Error getting route information");
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -153,14 +169,16 @@ public class TourController {
                 existingTour.setRouteImage(imgUrl);
 
                 tourService.updateTour(existingTour);
+                tourListViewModel.refreshTours();
+
             } catch (Exception e) {
                 logger.error("Error updating tour", e);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
             }
-            // Return a success response
+            // return a success response if ok
             return new ResponseEntity<>(tourDto, HttpStatus.OK);
         } else {
-            // If the tour with the given ID doesn't exist, return an error response
+            // return an error response if the tour with the given id doesn't exist
             return ResponseEntity.notFound().build();
         }
 
@@ -172,12 +190,12 @@ public class TourController {
         to = to.replace(" ", "%20");
         String apiUrl = String.format("http://www.mapquestapi.com/directions/v2/route?key=%s&from=%s&to=%s&routeType=%s",
                 apiKey, from, to, transportType);
-        logger.debug("IN GET ROUTE INFO STRING" + apiUrl);
+        logger.debug("IN GET ROUTE INFO STRING " + apiUrl);
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
 
-            logger.debug("IN GET ROUTE INFO");
+            logger.debug("IN GET ROUTE INFO ");
 
             JSONObject jsonObject = new JSONObject(response.getBody());
             JSONObject route = jsonObject.getJSONObject("route");
@@ -222,31 +240,62 @@ public class TourController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTour(@PathVariable Long id) {
-        System.out.println("in controller delete : " + id);
-        tourService.deleteTour(id);
+    public ResponseEntity<String> deleteTour(@PathVariable Long id) {
+        try {
+            boolean deleted = tourService.deleteTour(id);
+            if (deleted) {
+                tourListViewModel.refreshTours();
+                return ResponseEntity.ok("Tour deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tour not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting tour: " + e.getMessage());
+        }
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<TourDTO>> searchToursByName(@RequestParam("forSearchString") String string) {
-        List<TourDTO> matchingTours = tourService.searchQuery(string);
-        return ResponseEntity.ok(matchingTours);
+        try {
+            List<TourDTO> matchingTours = tourService.searchQuery(string);
+            return ResponseEntity.ok(matchingTours);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/saveaspdf/{id}")
     public ResponseEntity<TourDTO> createPDF(@PathVariable Long id) {
-        TourDTO tour = tourService.getTourById(id);
-        return ResponseEntity.ok(tour);
+        try {
+            TourDTO tour = tourService.getTourById(id);
+            if (tour != null) {
+                return ResponseEntity.ok(tour);
+            } else {
+                //404 Not found
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/createstats")
-    public List<TourDTO> createPDFStatistic() {
-        return tourService.getAllTours();
+    public ResponseEntity<List<TourDTO>> createPDFStatistic() {
+        try {
+            List<TourDTO> tours = tourService.getAllTours();
+            return ResponseEntity.ok(tours);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/export")
     public ResponseEntity<List<TourDTO>> exportToursWithLogs() {
-        List<TourDTO> tours = tourService.getAllTours();
-        return ResponseEntity.ok(tours);
+        try {
+            List<TourDTO> tours = tourService.getAllTours();
+            return ResponseEntity.ok(tours);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

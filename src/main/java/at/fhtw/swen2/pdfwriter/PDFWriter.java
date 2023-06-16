@@ -205,6 +205,9 @@ public class PDFWriter {
                     .add(new ListItem("Difficulty on average: " + difficulty))
                     .add(new ListItem("To: " + singleTour.getTo()));
             document.add(statisticList);
+
+            document.add(new Paragraph());
+
         }
         //Close document
         document.close();

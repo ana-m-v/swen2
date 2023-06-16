@@ -11,3 +11,13 @@ AnchorPane {
 TableColumn {
     -fx-pref-width: 75px;
 }
+
+
+.button {
+    -fx-pref-width: 300px;
+    -fx-background-color: rgba(136, 136, 220, 0.53);
+}
+
+VBox {
+    -fx-spacing: 5;
+}
