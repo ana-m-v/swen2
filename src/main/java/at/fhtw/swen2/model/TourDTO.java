@@ -4,9 +4,6 @@ import at.fhtw.swen2.persistence.entity.TourEntity;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,12 +111,6 @@ public class TourDTO {
     public TransportType getTransportType() {
         return transportType;
     }
-
-    // Return an ObservableList<String> containing the transport types for checkBox autofill
- /*   public ObservableList<TransportType> getTransportTypeObservableList() {
-        TransportType[] transportTypes = TransportType.values();
-        return FXCollections.observableArrayList(transportTypes);
-    }  */
 
     public void setTransportType(TransportType transportType) {
         this.transportType = transportType;

@@ -2,10 +2,9 @@ package at.fhtw.swen2.presentation.viewmodel;
 
 import at.fhtw.swen2.jsonConverter.JSONConverter;
 import at.fhtw.swen2.model.TourDTO;
-import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.pdfwriter.PDFWriter;
-import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.ObjectProperty;
@@ -14,16 +13,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class TourListViewModel {

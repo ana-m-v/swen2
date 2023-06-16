@@ -64,38 +64,11 @@ public class TourService {
         }
         return tourDTO;
     }
-    public void saveTour(TourDTO savedTour) {
-        TourEntity tour = new TourEntity(savedTour);
-     //   TourDTO tourDTO = tourRepository.findById(tour.getId());
 
-        if(tour != null) {
-            tour.setId(savedTour.getId());
-            tour.setName(savedTour.getName());
-            tour.setDescription(savedTour.getDescription());
-            tour.setFrom(savedTour.getFrom());
-            tour.setTo(savedTour.getTo());
-            tour.setDistance(savedTour.getDistance());
-            tour.setTime(savedTour.getTime());
-        }
-        tourRepository.save(tour);
-    }
     public void deleteTour(Long id) {
         System.out.println("in service delete : " + id);
 
         tourRepository.deleteById(id);
-    }
-
-    public List<TourDTO> searchToursByName(String name) {
-        List<TourEntity> matchingTourEntities = tourRepository.findByNameContainingIgnoreCase(name);
-        List<TourDTO> matchingTourDTOs = new ArrayList<>();
-
-        for (TourEntity tourEntity : matchingTourEntities) {
-            TourDTO tourDTO = new TourDTO(tourEntity);
-            System.out.println("match " + tourDTO.getName());
-            matchingTourDTOs.add(tourDTO);
-        }
-
-        return matchingTourDTOs;
     }
 
     public List<TourDTO> searchQuery(String searchString) {
@@ -107,32 +80,6 @@ public class TourService {
             System.out.println("match " + tourDTO.getName());
             matchingTourDTOs.add(tourDTO);
         }
-
         return matchingTourDTOs;
-    }
-
-    public List<TourDTO> getAllToursWithLogs() {
-        List<TourEntity> tours = tourRepository.findAll();
-        List<TourDTO> tourDTOs = new ArrayList<>();
-
-        for (TourEntity tour : tours) {
-            TourDTO tourDTO = new TourDTO();
-            tourDTO.setId(tour.getId());
-            // Set other tour properties
-
-            List<TourLogDTO> tourLogDTOs = new ArrayList<>();
-            for (TourLogEntity tourLog : tour.getTourLogs()) {
-                TourLogDTO tourLogDTO = new TourLogDTO();
-                tourLogDTO.setId(tourLog.getId());
-                // Set other tour log properties
-
-                tourLogDTOs.add(tourLogDTO);
-            }
-
-            tourDTO.setTourLogs(tourLogDTOs);
-            tourDTOs.add(tourDTO);
-        }
-
-        return tourDTOs;
     }
 }

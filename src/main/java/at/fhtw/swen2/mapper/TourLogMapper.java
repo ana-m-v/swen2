@@ -17,7 +17,6 @@ public class TourLogMapper extends AbstractMapper<TourLogEntity, TourLogDTO> {
                 .difficulty(entity.getDifficulty())
                 .totalTime(entity.getTotalTime())
                 .rating(entity.getRating())
-
                 .build();
     }
 

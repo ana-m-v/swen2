@@ -2,7 +2,6 @@ package at.fhtw.swen2.controller;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
-import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.service.TourService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -40,32 +39,14 @@ public class TourController {
         return tourService.getTourById(id);
     }
 
-//    @PostMapping
-//    public TourDTO createTour(@RequestBody TourDTO tourDTO) {
-//        return tourService.createTour(tourDTO);
-//    }
-
     @PostMapping
     public ResponseEntity<TourDTO> createTour(@RequestBody TourDTO tourDto) {
 
         System.out.println("IN CREATE in viewmodel");
         String from = tourDto.getFrom();
         String to = tourDto.getTo();
-        // Validate user input, maybe put in class later on, replaces everything except listed chars
-        to= to.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
-        from = from.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
-        System.out.println("User input From To: " + to + from);
         String transportType = valueOf(tourDto.getTransportType());
         System.out.println("Transport type in Post " + transportType);
-        //check if "," is followed by postal code - integer
-   /*     String[] hasPostalCode = to.split(",");
-        if(!hasPostalCode[1].isEmpty()) {
-            System.out.println("found ',' is it digit?" + Character.isDigit(hasPostalCode[1].charAt(0)));
-        } else if(Character.isDigit(hasPostalCode[1].charAt(0))){
-            System.out.println("Error- no postal code");
-            logger.error("Error creating tour, postal code is missing");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        } */
         // replace needed for html parsing
         from = from.replace(" ", "%20");
         to = to.replace(" ", "%20");
@@ -126,26 +107,13 @@ public class TourController {
             existingTour.setDescription(tourDto.getDescription());
             existingTour.setFrom(tourDto.getFrom());
             existingTour.setTo(tourDto.getTo());
-            // Update other properties new map bla
+            // Update other properties new map
 
             System.out.println("IN CREATE in viewmodel");
+            String transportType = valueOf(tourDto.getTransportType());
             String from = tourDto.getFrom();
             String to = tourDto.getTo();
-            // Validate user input, maybe put in class later on, replaces everything except listed chars
-            to= to.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
-            from = from.replaceAll("[_[^\\w\\däüöÄÜÖ\\-ß0-9, ]]", "");
-            System.out.println("User input From To: " + to + from);
-            String transportType = valueOf(tourDto.getTransportType());
-            System.out.println("Transport type in Post " + transportType);
-            //check if "," is followed by postal code - integer
-   /*     String[] hasPostalCode = to.split(",");
-        if(!hasPostalCode[1].isEmpty()) {
-            System.out.println("found ',' is it digit?" + Character.isDigit(hasPostalCode[1].charAt(0)));
-        } else if(Character.isDigit(hasPostalCode[1].charAt(0))){
-            System.out.println("Error- no postal code");
-            logger.error("Error creating tour, postal code is missing");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        } */
+
             // replace needed for html parsing
             from = from.replace(" ", "%20");
             to = to.replace(" ", "%20");
@@ -180,23 +148,17 @@ public class TourController {
                     logger.error("Error getting route information");
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
                 }
-
                 existingTour.setDistance(distance);
                 existingTour.setTime(estimatedTime);
                 existingTour.setRouteImage(imgUrl);
 
                 tourService.updateTour(existingTour);
-
-//                return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
             } catch (Exception e) {
                 logger.error("Error updating tour", e);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
             }
-
             // Return a success response
             return new ResponseEntity<>(tourDto, HttpStatus.OK);
-
-//            return ResponseEntity.ok("Tour updated successfully.");
         } else {
             // If the tour with the given ID doesn't exist, return an error response
             return ResponseEntity.notFound().build();
@@ -210,11 +172,7 @@ public class TourController {
         to = to.replace(" ", "%20");
         String apiUrl = String.format("http://www.mapquestapi.com/directions/v2/route?key=%s&from=%s&to=%s&routeType=%s",
                 apiKey, from, to, transportType);
-
-
-
         logger.debug("IN GET ROUTE INFO STRING" + apiUrl);
-
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
@@ -237,17 +195,12 @@ public class TourController {
             System.out.println("bounding box " + box);
 
             JSONObject ul = box.getJSONObject("ul");
-
             JSONObject lr = box.getJSONObject("lr");
 
             double ulLng = ul.getDouble("lng");
-
             double ulLat = ul.getDouble("lat");
-
             double lrLng = lr.getDouble("lng");
-
             double lrLat = lr.getDouble("lat");
-
 
             String transport = route.getString("options");
 
@@ -260,7 +213,6 @@ public class TourController {
             routeInfo.put("ulLng", ulLng);
             routeInfo.put("ulLat", ulLat);
             routeInfo.put("session", session);
-
 
             return routeInfo;
         } catch (Exception e) {

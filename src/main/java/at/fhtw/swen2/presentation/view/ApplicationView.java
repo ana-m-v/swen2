@@ -9,14 +9,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
-import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -29,8 +26,6 @@ public class ApplicationView implements Initializable, StageAware {
     @FXML
     public Tab tab3;
     ApplicationEventPublisher publisher;
-
-    TourListView tourListView;
 
     @FXML
     BorderPane layout;

@@ -27,8 +27,6 @@ public class SearchView implements Initializable {
     private SearchViewModel searchViewModel;
     @FXML
     public TextField searchField;
-    ListView<TourLogDTO> tourLogList = new ListView<>();
-    ListView<TourDTO> tourList = new ListView<>();
     @FXML
     private TableColumn<TourDTO, String> nameColumn;
     @FXML

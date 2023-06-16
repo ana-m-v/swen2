@@ -38,12 +38,8 @@ public class TourView implements Initializable {
     @Autowired
     private TourViewModel tourViewModel;
 
-    @Autowired
-    private TourListViewModel tourListViewModel;
-
     @FXML
     public TextField nameTextField;
-
     @FXML
     private TextField descriptionTextField;
     @FXML
@@ -52,10 +48,6 @@ public class TourView implements Initializable {
     private TextField toTextField;
     @FXML
     private ChoiceBox<TransportType> transportTypeChoiceBox;
-    @FXML
-    private Button createButton;
-    @FXML
-    private Button deleteButton;
     @FXML
     private Text feedbackText;
 
@@ -79,6 +71,11 @@ public class TourView implements Initializable {
             logger.warn("Empty fields in Create New Tour Form");
             return;
         }
+        if (containsSpecialChars(nameTextField.getText()) || containsSpecialChars(descriptionTextField.getText()) || containsSpecialChars(fromTextField.getText()) || containsSpecialChars(toTextField.getText())) {
+            feedbackText.setText("Special characters are not allowed.");
+            logger.warn("Input contains special characters in Create New Tour Form");
+            return;
+        }
         try {
             int intTest = Integer.parseInt(fromTextField.getText());
             feedbackText.setText("Destination can't be a number");
@@ -93,6 +90,10 @@ public class TourView implements Initializable {
         } catch (NumberFormatException e) {
             System.out.println("Input String cannot be parsed to Integer. Good!");
         }
+        feedbackText.setText("");
         tourViewModel.createTour();
+    }
+    private boolean containsSpecialChars(String text) {
+        return text.matches(".*[$&+,:;=?@#|\\/'\\\\<>.-^*()%!]");
     }
 }

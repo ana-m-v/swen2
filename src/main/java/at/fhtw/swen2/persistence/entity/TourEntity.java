@@ -1,19 +1,14 @@
 package at.fhtw.swen2.persistence.entity;
 
 import at.fhtw.swen2.model.TourDTO;
-import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.model.TransportType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.Set;
-
-import java.util.HashSet;
 import java.util.List;
 
-// @table missing?
 @Data
 @Builder
 @NoArgsConstructor
@@ -53,11 +48,6 @@ public class TourEntity {
     private String routeImage;
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TourLogEntity> tourLogs;
-    /*
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "tour_id")
-    private Set<TourLogDTO> tourLogs = new HashSet<>();   */
-
     @Column
     private String forSearchString;
     @PrePersist
@@ -91,7 +81,8 @@ public class TourEntity {
         return id;
     }
 
-    public TourEntity(String name, String description, String from, String to, TransportType transportType, double distance, int time, String routeImage) {
+    public TourEntity(String name, String description, String from, String to, TransportType transportType, double distance,
+                      int time, String routeImage) {
         this.name = name;
         this.description = description;
         this.fromDestination = from;
@@ -101,8 +92,6 @@ public class TourEntity {
         this.estimatedTime = time;
         this.routeImage = routeImage;
     }
-
-    ;
 
     public String getName() {
         return name;

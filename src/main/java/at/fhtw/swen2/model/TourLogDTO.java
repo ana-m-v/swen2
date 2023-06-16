@@ -18,8 +18,6 @@ public class TourLogDTO {
     private int totalTime;
     private int rating;
 
-    //private Long tourId;
-
     public TourLogDTO(Long id, Timestamp dateTime, String comment, int difficulty, int totalTime, int rating) {
         this.id = id;
         this.dateTime = dateTime;

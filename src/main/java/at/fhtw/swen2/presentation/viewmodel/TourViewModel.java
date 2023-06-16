@@ -7,7 +7,6 @@ import javafx.beans.property.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -220,26 +219,9 @@ public class TourViewModel {
     public void updateEditedTour(TourDTO tour) {
         try {
             restTemplate.put(baseUrl + "/" + tour.getId(), tour);
-            //tourListViewModel.getTours().add(response); // Add the newly created tour to the list of tours
             tourListViewModel.refreshTours();
         } catch (RestClientException e) {
             logger.error("Error with updateEditedTour() in TourViewModel");
-            e.printStackTrace();
-        }
-    }
-
-    public void saveEditTour(Long id) {
-
-        TourDTO tour = TourDTO.builder()
-                .name(getName()).description(getDescription()).distance(getDistance())
-                .time(getTime()).from(getFrom()).to(getTo())
-                .transportType(getTransportType()).distance(getDistance()).routeImage(getRouteImage())
-                .build();
-        try {
-            restTemplate.put(baseUrl + "/" + id, tour);
-            tourListViewModel.refreshTours();
-            //tourListViewModel.getTours().add(tour);
-        } catch (RestClientException e) {
             e.printStackTrace();
         }
     }
@@ -250,7 +232,6 @@ public class TourViewModel {
             restTemplate.delete(baseUrl + "/" + tourDTO.getId());
             tourListViewModel.getTours().remove(tourDTO);
             tourLogListViewModel.refreshTourLogs();
-//            selectedTour.set(null);
         } catch (RestClientException e) {
             logger.error("Error with deleteTour() in TourViewModel");
             e.printStackTrace();

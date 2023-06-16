@@ -8,16 +8,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
 import jakarta.persistence.Entity;
-
 import java.sql.Timestamp;
 
 @Data
 @Builder
-//@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -25,9 +20,7 @@ import java.sql.Timestamp;
 public class TourLogEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
- //   @jakarta.persistence.Id
     private Long id;
-  //  private Long id_log;
     private Timestamp dateTime;
 
     private String comment;
@@ -41,7 +34,6 @@ public class TourLogEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private TourEntity tour;
-
 
     public TourLogEntity(Timestamp dateTime, String comment, int difficulty, int totalTime, int rating) {
         this.dateTime = dateTime;

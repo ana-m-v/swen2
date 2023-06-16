@@ -2,24 +2,14 @@ package at.fhtw.swen2.controller;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TransportType;
-import at.fhtw.swen2.persistence.entity.TourEntity;
-import at.fhtw.swen2.service.TourService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,8 +50,6 @@ public class TourControllerTest {
         // Arrange
         TourDTO tourDTOtest = new TourDTO(0L, "Update Tour Return Ok", "bla", "Bonn", "Wien", TransportType.shortest, 1234, 1234, "image.jpg", 5, 5, null);
         TourDTO response = restTemplate.postForObject(BASE_URL, tourDTOtest, TourDTO.class);
-
-//        long tourId = 4L;
         TourDTO tourDTO = new TourDTO();
         // Set properties of the tour object
         tourDTO.setName("Updated");

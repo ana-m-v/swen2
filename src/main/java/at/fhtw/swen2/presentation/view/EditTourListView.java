@@ -13,11 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
-import javafx.util.converter.NumberStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +34,8 @@ public class EditTourListView implements Initializable {
 
     @Autowired
     public TourListViewModel tourListViewModel;
-    ListView<TourDTO> tourList = new ListView<>();
     @Autowired
     public TourLogListViewModel tourLogListViewModel;
-    ListView<TourDTO> tourLogList = new ListView<>();
     @Autowired
     public TourViewModel tourViewModel;
     @FXML
@@ -70,14 +66,7 @@ public class EditTourListView implements Initializable {
     @FXML
     private TextField toEditTextField;
     @FXML
-    private TextField distanceEditTextField;
-    @FXML
-    private TextField timeEditTextField;
-    @FXML
     private ChoiceBox<TransportType> transportTypeChoiceBox;
-    @FXML
-    private ImageView tourImageView;
-    private ApplicationContext applicationContext;
     @FXML
     private Text feedbackText;
 
@@ -85,6 +74,7 @@ public class EditTourListView implements Initializable {
     public void initialize(URL location, ResourceBundle rb){
         logger.info("EditTourListView initialized.");
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        //set table for tours
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         fromColumn.setCellValueFactory(new PropertyValueFactory<>("from"));
         toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
@@ -92,25 +82,23 @@ public class EditTourListView implements Initializable {
         distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
 
+        //set form field edit tour
         nameEditTextField.textProperty().bindBidirectional(tourViewModel.nameProperty());
         descriptionEditTextField.textProperty().bindBidirectional(tourViewModel.descriptionProperty());
         fromEditTextField.textProperty().bindBidirectional(tourViewModel.fromProperty());
         toEditTextField.textProperty().bindBidirectional(tourViewModel.toProperty());
         transportTypeChoiceBox.setItems(FXCollections.observableArrayList(TransportType.values()));
         transportTypeChoiceBox.valueProperty().bindBidirectional(tourViewModel.transportTypeProperty());
-//        distanceEditTextField.textProperty().bindBidirectional(tourViewModel.distanceProperty(), new NumberStringConverter());
-//        timeEditTextField.textProperty().bindBidirectional(tourViewModel.timeProperty(), new NumberStringConverter());
+
         tableView.setItems(tourListViewModel.getTours());
         tableView.setOnMouseClicked(event -> {
             TourDTO selectedTour = (TourDTO) tableView.getSelectionModel().getSelectedItem();
             if(selectedTour != null) {
-                //tourListViewModel.setSelectedTour(selectedTour);
                 tourViewModel.setSelectedTour(selectedTour);
                 System.out.println("IN EDIT TOUR SELECTED TOUR " + selectedTour.getName() + " id " + selectedTour.getId());
             }
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 if (selectedTour != null) {
-                   // tourListViewModel.setSelectedTour(selectedTour);
                     tourViewModel.setSelectedTour(selectedTour);
                     tourViewModel.setId(selectedTour.getId());
                     System.out.println("selected tour in click id name " + selectedTour.getId() + " " + selectedTour.getName() + "Distance: " + selectedTour.getDistance()
@@ -120,8 +108,6 @@ public class EditTourListView implements Initializable {
                     fromEditTextField.setText(selectedTour.getFrom());
                     toEditTextField.setText(selectedTour.getTo());
                     transportTypeChoiceBox.setValue(selectedTour.getTransportType());
-//                    distanceEditTextField.setText(Double.toString(selectedTour.getDistance()));
-//                    timeEditTextField.setText(String.valueOf(selectedTour.getTime()));
                 }
             }
         });
@@ -148,23 +134,19 @@ public class EditTourListView implements Initializable {
         } catch (NumberFormatException e) {
             System.out.println("Input String cannot be parsed to Integer. Good!");
         }
-        System.out.println("Saviiing Prozsezzssss  krrr kkkkr");
         TourDTO tour = TourDTO.builder()
                 .name(nameEditTextField.getText())
                 .description(descriptionEditTextField.getText())
-//                .distance(Double.parseDouble(distanceEditTextField.getText()))
-//                .time(Integer.parseInt(timeEditTextField.getText()))
                 .from(fromEditTextField.getText())
                 .to(toEditTextField.getText())
                 .transportType(tourViewModel.getTransportType())
-//                .routeImage(tourViewModel.getRouteImage())
                 .build();
         tour.setId(tourViewModel.getId());
-        System.out.println("Saviiing Prozsezzssss  krrr kkkkr tourname in text field" + nameEditTextField.getText() + " tourjname in tour " + tour.getName() + "tourviewmod id " + tour.getId());
-
+        System.out.println("Saviiing Prozsezzssss  krrr kkkkr tourname in text field" + nameEditTextField.getText() +
+                " tourname in tour " + tour.getName() + "tourviewmod id " + tour.getId());
         tourViewModel.updateEditedTour(tour);
     }
-    //saves Tour backward
+    //saves Tour backward - unique feature
     public void saveBackwardTourButtonAction(ActionEvent actionEvent) {
         System.out.println("editing tour id: " + tourViewModel.getId());
         String from = tourViewModel.getFrom();
@@ -173,7 +155,6 @@ public class EditTourListView implements Initializable {
         tourViewModel.setFrom(to);
         tourViewModel.setName(tourViewModel.getName() + "_back");
         tourViewModel.createTour();
-
     }
 
     public void deleteButtonAction(ActionEvent actionEvent) {

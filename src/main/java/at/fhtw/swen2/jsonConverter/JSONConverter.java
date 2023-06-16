@@ -1,8 +1,6 @@
 package at.fhtw.swen2.jsonConverter;
 
-import at.fhtw.swen2.controller.TourController;
 import at.fhtw.swen2.model.TourDTO;
-import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.presentation.viewmodel.TourViewModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,11 +29,8 @@ public class JSONConverter {
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         String timestamp = currentTime.format(formatter);
-      //  String filename =
         FileWriter file = new FileWriter("src/main/java/at/fhtw/swen2/jsonConverter/JSONFiles/tours_" + timestamp + ".json");
         file.write(tours);
-      //  file.write("\n");
-       // file.write(tourLogs);
         file.close();
         //user feedback
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -45,19 +39,15 @@ public class JSONConverter {
         alert.setContentText("JSON file generated successfully! \nView: src/main/java/at/fhtw/swen2/jsonConverter/JSONFiles/");
         alert.showAndWait();
     }
-        //
+        //not working properly
     public void importJSONFile(String filename) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         filename = "src/main/java/at/fhtw/swen2/jsonConverter/JSONFiles/tours_2023-06-16_09-44-11.json";
         BufferedReader reader;
-        String tourLogs = "";
         String tours = "";
         try {
             reader = new BufferedReader(new FileReader(filename));
             tours = reader.readLine();
-            //System.out.println("Readed: " + tours);
-
-
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,9 +58,7 @@ public class JSONConverter {
             System.out.println("tours from json file" + tours);
             // post tour by tour
             for (int i = 0; i < tourList.size(); i++) {
-
                 TourDTO tour = tourList.get(i);
-                //System.out.println(tourList.get(i));
                 tourViewModel = new TourViewModel(tour);
                 tourViewModel.createTour();
             }

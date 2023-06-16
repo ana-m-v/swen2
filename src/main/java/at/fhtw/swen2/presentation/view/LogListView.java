@@ -10,18 +10,14 @@ import at.fhtw.swen2.presentation.viewmodel.TourLogListViewModel;
 import at.fhtw.swen2.presentation.viewmodel.TourViewModel;
 import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.presentation.viewmodel.TourLogViewModel;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
-import javafx.util.StringConverter;
-import javafx.util.converter.LocalDateTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,24 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.util.converter.DateTimeStringConverter;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 
 import java.net.URL;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Component
 @Scope("prototype")
@@ -58,10 +46,8 @@ public class LogListView implements Initializable {
     public Button saveLogButton;
     public Button editLogButton;
     public Button deleteLogButton;
-    ListView<TourLogDTO> tourLogList = new ListView<>();
     @Autowired
     public TourListViewModel tourListViewModel;
-    ListView<TourDTO> tourList = new ListView<>();
     @Autowired
     public TourLogViewModel tourLogViewModel;
     @Autowired
@@ -126,47 +112,22 @@ public class LogListView implements Initializable {
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
         totalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("totalTime"));
         dateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
-        //log edit
-      //  dateTimeTextField.textProperty().bindBidirectional(tourViewModel.nameProperty());
-//        dateTimeTextField.textProperty().bindBidirectional(tourLogViewModel.dateTimeProperty(), new DateTimeStringConverter());
 
-        // Bind the text property bidirectionally with the datetime property ??
+        //log edit form field
         dateTimeTextField.textProperty().bindBidirectional(tourLogViewModel.dateTimeProperty());
-
         totalTimeTextField.textProperty().bindBidirectional(tourLogViewModel.totalTimeProperty(), new NumberStringConverter());
         ratingTextField.textProperty().bindBidirectional(tourLogViewModel.ratingProperty(), new NumberStringConverter());
         difficultyTextField.textProperty().bindBidirectional(tourLogViewModel.difficultyProperty(), new NumberStringConverter());
         commentTextField.textProperty().bindBidirectional(tourLogViewModel.commentProperty());
         tableViewTour.setItems(tourListViewModel.getTours());
-//        tableViewLog.setItems(tourLogListViewModel.getTourLogs());
 
         tableViewTour.setOnMouseClicked(event -> {
             TourDTO selectedTour = (TourDTO) tableViewTour.getSelectionModel().getSelectedItem();
-       /*     if(selectedTour != null) {
-                //tourListViewModel.setSelectedTour(selectedTour);
-                tourViewModel.setSelectedTour(selectedTour);
 
-            } */
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-
                 if (selectedTour != null) {
-//                    tableViewLog.setItems(tourLogListViewModel.getTourLogs(selectedTour));
-//                    tableViewLog.setItems(tourLogListViewModel.getTourLogsFromTour(selectedTour));
-
-                    // tourListViewModel.setSelectedTour(selectedTour);
                     tourViewModel.setSelectedTour(selectedTour);
-                    List<TourLogDTO> tourLogs = selectedTour.getTourLogs();
                     tableViewLog.setItems(FXCollections.observableList(selectedTour.getTourLogs()));
-
-//                    tableViewLog.setItems(FXCollections.observableList(tourLogs));
-                    //System.out.println("selected tour in click id name " + selectedTour.getId() + " " + selectedTour.getName() + "Distance: " + selectedTour.getDistance()
-                      //      + "TourViewModel" + tourViewModel.nameProperty() + tourViewModel.toProperty());
-                //    nameEditTextField.setText(selectedTour.getName());
-               //     descriptionEditTextField.setText(selectedTour.getDescription());
-                 //   fromEditTextField.setText(selectedTour.getFrom());
-                   // toEditTextField.setText(selectedTour.getTo());
-                   // distanceEditTextField.setText(Double.toString(selectedTour.getDistance()));
-                   // timeEditTextField.setText(String.valueOf(selectedTour.getTime()));
                 }
             }
         });
@@ -203,6 +164,11 @@ public class LogListView implements Initializable {
             logger.warn("Empty fields in Create New Tour Form");
             return;
         }
+        if(!validateTimestamp(dateTimeTextField.getText())){
+            feedbackText.setText("Timestamp format must be yyyy-mm-dd hh:mm:ss");
+            logger.warn("Timestamp format is not correct.");
+            return;
+        }
         try {
             int parsedTotalTime = Integer.parseInt(totalTimeTextField.getText());
         } catch (NumberFormatException e) {
@@ -226,8 +192,6 @@ public class LogListView implements Initializable {
             logger.warn("Non-numeric value in Create New Tour Form");
             return;
         }
-
-        System.out.println("Saviiing Prozsezzssss  krrr kkkkr");
         TourDTO selectedTour = (TourDTO) tableViewTour.getSelectionModel().getSelectedItem();
         if (selectedTour != null) {
             TourLogEntity tourLog = new TourLogEntity();
@@ -238,6 +202,7 @@ public class LogListView implements Initializable {
             logger.warn("SelectedTour is null");
             feedbackText.setText("All of the fields must be filled out.");
         }
+        tableViewLog.setItems(FXCollections.observableList(selectedTour.getTourLogs()));
     }
 
 
@@ -247,7 +212,11 @@ public class LogListView implements Initializable {
             logger.warn("Empty fields in Create New Tour Form");
             return;
         }
-
+        if(!validateTimestamp(dateTimeTextField.getText())){
+            feedbackText.setText("Timestamp format must be yyyy-mm-dd hh:mm:ss");
+            logger.warn("Timestamp format is not correct.");
+            return;
+        }
         try {
             int parsedTotalTime = Integer.parseInt(totalTimeTextField.getText());
         } catch (NumberFormatException e) {
@@ -269,14 +238,11 @@ public class LogListView implements Initializable {
             logger.warn("Non-numeric value in Create New Tour Form");
             return;
         }
-
         String dateTimeString = dateTimeTextField.getText();
         System.out.println("DATETIME IN UPDATE " + dateTimeString);
         LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Timestamp dateTime = Timestamp.valueOf(localDateTime);
-
         System.out.println("DATETIME timestamp IN UPDATE " + dateTime);
-
 
         TourLogDTO tourLog = TourLogDTO.builder()
                 .dateTime(dateTime)
@@ -284,23 +250,23 @@ public class LogListView implements Initializable {
                 .rating(Integer.parseInt(ratingTextField.getText()))
                 .difficulty(Integer.parseInt(difficultyTextField.getText()))
                 .comment(commentTextField.getText())
-//                .routeImage(tourViewModel.getRouteImage())
                 .build();
 
         tourLog.setId(tourLogViewModel.getId());
-
+        feedbackText.setText("");
         tourLogViewModel.updateTourLog(tourLog);
     }
 
     public void deleteLogButtonAction(ActionEvent actionEvent) {
         TourLogDTO selectedTourLog = (TourLogDTO) tableViewLog.getSelectionModel().getSelectedItem();
         if (selectedTourLog != null) {
-
             tourLogViewModel.deleteTourLog(selectedTourLog);
-        }
-        else {
+        } else {
             feedbackText.setText("You have not selected anything.");
             logger.warn("SelectedTour is null");
         }
+    }
+    public boolean validateTimestamp(String text) {
+        return text.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$");
     }
 }

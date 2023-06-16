@@ -36,5 +36,4 @@ public class TourMapper extends AbstractMapper<TourEntity, TourDTO> {
                 .routeImage(tourDTO.getRouteImage())
                 .build();
     }
-
 }

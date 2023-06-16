@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -58,7 +57,6 @@ public class StageManager {
         } catch (IOException e) {
             log.error("Error occurred while creating Application scene", e);
         }
-
         stage.show();
     }
 

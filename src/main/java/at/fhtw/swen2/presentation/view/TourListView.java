@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -38,7 +37,6 @@ public class TourListView implements Initializable {
 
     @Autowired
     public TourListViewModel tourListViewModel;
-    ListView<TourDTO> tourList = new ListView<>();
     @Autowired
     public TourLogListViewModel tourLogListViewModel;
     @FXML
@@ -60,13 +58,6 @@ public class TourListView implements Initializable {
 
     @FXML
     private ImageView tourImageView;
-    private ApplicationContext applicationContext;
-    @FXML
-    public Button deleteButton;
-    @FXML
-    public static Button editButton;
-
-    public PDFWriter pdfWriter= new PDFWriter();
     private TourDTO tourToPdf = new TourDTO();
 
     public JSONConverter jsonConverter = new JSONConverter();
@@ -92,7 +83,6 @@ public class TourListView implements Initializable {
             }
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 if (selectedTour != null) {
-//                    tourListViewModel.setSelectedTour(selectedTour);
                     System.out.println("selected tour in click id name " + selectedTour.getId() + " " + selectedTour.getName());
                     // display the image for the selected tour
                     Image tourImage = new Image(selectedTour.getRouteImage());
@@ -104,22 +94,13 @@ public class TourListView implements Initializable {
         });
         tourListViewModel.refreshTours();
     }
+
     public void createTourPDFButtonAction()  {
-//        try {
             tourListViewModel.createPDF(tourToPdf);
-//            pdfWriter.createPdfTour(tourToPdf);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
+
     public void createTourStatisticPDFButtonAction()  {
         tourListViewModel.createPDFStatistic();
-//
-//        try {
-//            pdfWriter.createPdfTourStatistic(tourToPdf);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void importToursButtonAction() throws JsonProcessingException {

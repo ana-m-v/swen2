@@ -1,7 +1,5 @@
 package at.fhtw.swen2.service;
 
-import at.fhtw.swen2.mapper.TourLogMapper;
-import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.persistence.entity.TourLogEntity;
@@ -24,9 +22,6 @@ public class TourLogService {
 
     @Autowired
     private TourRepository tourRepository;
-    @Autowired
-    private TourLogMapper tourLogMapper;
-
 
     public List<TourLogDTO> getAllTourLogs() {
         List<TourLogEntity> tours = tourLogRepository.findAll();
@@ -37,15 +32,6 @@ public class TourLogService {
         Optional<TourLogEntity> tour = tourLogRepository.findById(id);
         return tour.map(TourLogDTO::new).orElse(null);
     }
-    // to do? getTourLogByTour
-//    public TourLogDTO createTourLog(TourLogDTO tourLogDTO) {
-//        System.out.println("in service create tourlog");
-//        TourLogEntity tourlog = new TourLogEntity(tourLogDTO);
-//        System.out.println("in service tour Log comment " + tourLogDTO.getComment());
-//        tourLogRepository.save(tourlog);
-//        tourLogDTO.setId(tourlog.getId());
-//        return tourLogDTO;
-//    }
 
     public TourLogDTO createTourLog(TourLogDTO tourLogDto, long tourId) {
         TourEntity tour = tourRepository.findById(tourId)
@@ -62,8 +48,7 @@ public class TourLogService {
         // Map savedTourLogEntity to TourLogDto and return it
     }
     public void deleteTourLog(Long id) {
-        System.out.println("in service delete : " + id);
-
+        System.out.println("in service delete tour log: " + id);
         tourLogRepository.deleteById(id);
     }
 
@@ -83,7 +68,6 @@ public class TourLogService {
             tourLog.setDifficulty(existingTourLog.getDifficulty());
             tourLog.setRating(existingTourLog.getRating());
             tourLog.setComment(existingTourLog.getComment());
-            // Set other properties accordingly
 
             // Save the updated tour log entity
             tourLog = tourLogRepository.save(tourLog);
@@ -93,18 +77,9 @@ public class TourLogService {
 
             return existingTourLog;
         } else {
-            // Handle the case when the tour log does not exist
-            // You can throw an exception or return null, depending on your requirement
+            // returns null if there is no tour log
             return null;
         }
-
-//        System.out.println("in service update tour");
-//        TourLogEntity tourLog = new TourLogEntity(existingTourLog);
-////        System.out.println("in service tour dto " + tourDTO.getName() + " and tour entity: " + tour.getName());
-//        tourLogRepository.save(tourLog);
-//        existingTourLog.setId(tourLog.getId());
-//        return existingTourLog;
-
     }
 
 
@@ -121,7 +96,6 @@ public class TourLogService {
             TourLogDTO tourLogDTO = new TourLogDTO(tourLog);
             tourLogDTOs.add(tourLogDTO);
         }
-
         return tourLogDTOs;
     }
 
@@ -134,7 +108,6 @@ public class TourLogService {
             System.out.println("match " + tourLogDTO.getComment());
             matchingTourLogDTOs.add(tourLogDTO);
         }
-
         return matchingTourLogDTOs;
     }
 }

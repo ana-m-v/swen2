@@ -1,7 +1,6 @@
 package at.fhtw.swen2.service;
 
 import at.fhtw.swen2.model.TourDTO;
-import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.persistence.repository.TourRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class TourServiceTest {
 
     @Autowired
-    private TourRepository tourRepository;
-
-    private TestEntityManager entityManager;
-
-    @Autowired
     private TourService tourService;
 
     @Test
     public void createTour_ValidTour_ReturnsCreatedTourDTO() {
-        // Create a TourDTO object with the necessary data
+        // Create a TourDTO object
         TourDTO tourDTO = new TourDTO();
         tourDTO.setName("Service Test Tour Create");
-        // Add other properties to the tourDTO as needed
 
         // Call the createTour method in the tour service
         TourDTO createdTourDTO = tourService.createTour(tourDTO);
@@ -36,15 +29,12 @@ class TourServiceTest {
 
         // Verify that the tour name matches the original tourDTO name
         assertEquals(tourDTO.getName(), createdTourDTO.getName());
-
-        // Add additional assertions for other properties if needed
     }
 
     @Test
     void updateTour() {
         TourDTO tourDTO = new TourDTO();
         tourDTO.setName("Service Test Tour Create");
-        // Add other properties to the tourDTO as needed
 
         // Call the createTour method in the tour service
         TourDTO createdTourDTO = tourService.createTour(tourDTO);
@@ -57,7 +47,6 @@ class TourServiceTest {
 
         TourDTO toUpdateTourDTO = new TourDTO();
         toUpdateTourDTO.setName("Updated Service");
-
         TourDTO updatedTourDTO = tourService.updateTour(toUpdateTourDTO);
 
         assertEquals(updatedTourDTO.getName(), toUpdateTourDTO.getName());
@@ -68,7 +57,6 @@ class TourServiceTest {
     void deleteExistingTour() {
         TourDTO tourDTO = new TourDTO();
         tourDTO.setName("Service Test Tour Delete");
-        // Add other properties to the tourDTO as needed
 
         // Call the createTour method in the tour service
         TourDTO createdTourDTO = tourService.createTour(tourDTO);

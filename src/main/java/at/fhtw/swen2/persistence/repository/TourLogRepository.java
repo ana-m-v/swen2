@@ -1,6 +1,5 @@
 package at.fhtw.swen2.persistence.repository;
 
-import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.persistence.entity.TourLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

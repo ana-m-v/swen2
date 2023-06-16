@@ -51,18 +51,6 @@ public class SearchViewModel {
         return tourLogs;
     }
 
-//    public void search() {
-//        try {
-//            String url = baseUrl + "/search?name=" + searchString.get();
-//            ResponseEntity<TourDTO[]> response = restTemplate.getForEntity(url, TourDTO[].class);
-//            List<TourDTO> matchingTours = Arrays.asList(response.getBody());
-//            tours.addAll(matchingTours);
-////            tourTable.getItems().setAll(matchingTours);
-//        } catch (RestClientException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public void search() {
         try {
             tours.clear();

@@ -3,25 +3,12 @@ package at.fhtw.swen2.controller;
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.model.TransportType;
-import at.fhtw.swen2.persistence.entity.TourEntity;
-import at.fhtw.swen2.service.TourService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -102,7 +89,7 @@ public class TourLogControllerTest {
         tourLog.setDifficulty(8);
         tourLog.setRating(6);
         tourLog.setTotalTime(4312);
-       // tourLog.setDateTime(Timestamp.valueOf("2022-09-01 09:01:15"));
+
         // edit Log
         assertDoesNotThrow(() -> {
             assert tourLogResponse != null;

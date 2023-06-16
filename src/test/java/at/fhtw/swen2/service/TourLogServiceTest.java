@@ -2,7 +2,6 @@ package at.fhtw.swen2.service;
 
 import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.persistence.entity.TourEntity;
-import at.fhtw.swen2.persistence.entity.TourLogEntity;
 import at.fhtw.swen2.persistence.repository.TourLogRepository;
 import at.fhtw.swen2.persistence.repository.TourRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +19,6 @@ class TourLogServiceTest {
     @Autowired
     private TourRepository tourRepository;
 
-    @Autowired
-    private TourLogRepository tourLogRepository;
-
     private Long existingTourId;
 
     @BeforeEach
@@ -32,13 +28,6 @@ class TourLogServiceTest {
         tourEntity = tourRepository.save(tourEntity);
         existingTourId = tourEntity.getId();
     }
-
-//    @AfterEach
-//    public void tearDown() {
-//        // Perform any necessary cleanup after each test
-//        tourRepository.deleteAll();
-//        tourLogRepository.deleteAll();
-//    }
 
     @Test
     public void createTourLog_TourId_ReturnsCreatedTourLogDTO() {

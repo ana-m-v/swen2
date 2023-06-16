@@ -7,14 +7,10 @@ import at.fhtw.swen2.presentation.viewmodel.TourLogListViewModel;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.element.Image;
-
-import com.itextpdf.kernel.pdf.action.PdfAction;
 import com.itextpdf.layout.Document;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.*;
-
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -26,11 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import org.springframework.stereotype.Component;
-
-import javax.swing.text.StyleConstants;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.ArrayList;
 
 @Component
@@ -53,8 +45,6 @@ public class PDFWriter {
 
         // Define the format for the timestamp string
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
-        // Format the current timestamp as a string
         String timestampString = currentTime.format(formatter);
         String filename = tour.getId() + "_" +tour.getName() + "_" + timestampString +".pdf";
         String dest = path + filename;
@@ -64,7 +54,6 @@ public class PDFWriter {
 
         //Initialize PDF writer
         PdfWriter writer = new PdfWriter(dest);
-        //new PDFWriter().createPdf(dest);
 
         //Initialize PDF document
         PdfDocument pdfDoc = new PdfDocument(writer);
@@ -118,10 +107,8 @@ public class PDFWriter {
                     "\nDifficulty 1-10: " + tourLog.getDifficulty() +
                     "\nComment: " + tourLog.getComment() +
                     "\n\n";
-
             tourInfoList.add(tourLogInfo);
         }
-
         // Create a List object and add the tourInfoList to it
         List logList = new List()
                 .setSymbolIndent(12)
@@ -153,77 +140,72 @@ public class PDFWriter {
         File file = new File(dest);
         file.getParentFile().mkdirs();
 
-        //Initialize PDF writer
+        //Initialize PDF writer, PDF document and document
         PdfWriter writer = new PdfWriter(dest);
-
         PdfDocument pdfDoc = new PdfDocument(writer);
-
         Document document = new Document(pdfDoc);
-
 
         // Add a Paragraph
         document.add(new Paragraph("Your selected Tour:"));
         // Create a List
         for(TourDTO singleTour : tour){
-        List list = new List()
-                .setSymbolIndent(12)
-                .setListSymbol("\u2022");
+            List list = new List()
+                    .setSymbolIndent(12)
+                    .setListSymbol("\u2022");
+            // Add ListItem objects
+            list.add(new ListItem("Name: " + singleTour.getName()))
+                    .add(new ListItem("Description: " + singleTour.getDescription()))
+                    .add(new ListItem("From: " + singleTour.getFrom()))
+                    .add(new ListItem("To: " + singleTour.getTo()))
+                    .add(new ListItem("Distance: " + singleTour.getDistance()))
+                    .add(new ListItem("Time: " + singleTour.getTime()))
+                    .add(new ListItem("Transport Type: " + singleTour.getTransportType()));
+            document.add(list);
+            // add the image
+            String imageUrl = singleTour.getRouteImage();
 
-        // Add ListItem objects
-        list.add(new ListItem("Name: " + singleTour.getName()))
-                .add(new ListItem("Description: " + singleTour.getDescription()))
-                .add(new ListItem("From: " + singleTour.getFrom()))
-                .add(new ListItem("To: " + singleTour.getTo()))
-                .add(new ListItem("Distance: " + singleTour.getDistance()))
-                .add(new ListItem("Time: " + singleTour.getTime()))
-                .add(new ListItem("Transport Type: " + singleTour.getTransportType()));
-        document.add(list);
-        // add the image
-        String imageUrl = singleTour.getRouteImage();
+            // Create an ImageData object from the URL
+            ImageData imageData = ImageDataFactory.create(imageUrl);
 
-        // Create an ImageData object from the URL
-        ImageData imageData = ImageDataFactory.create(imageUrl);
+            // Create an Image object from the ImageData
+            Image image = new Image(imageData);
 
-        // Create an Image object from the ImageData
-        Image image = new Image(imageData);
+            // Add the image to your PDF document
+            document.add(image);
+            document.add(new Paragraph("Statistics from TourLogs:"));
+            // get Logs by tourId
+            tourLogListViewModel.refreshTourLogs();
+            tourLogs = tourLogListViewModel.getTourLogs();
+            // Iterate over the tourList and extract the desired information
+            double countTotalTime = 0;
+            double countRating = 0;
+            double countDifficulty = 0;
+            double totalTime;
+            double rating;
+            double difficulty;
+            int counter = 0;
+            for (TourLogDTO tourLog : singleTour.getTourLogs()) {
+                System.out.println("tourLog attached: " + tourLog.getComment());
+                countTotalTime += tourLog.getTotalTime();
+                countRating += tourLog.getRating();
+                countDifficulty += tourLog.getDifficulty();
+                counter++;
+            }
+            totalTime = countTotalTime / counter;
+            rating = countRating / counter;
+            difficulty = countDifficulty / counter;
+            // Create a List
+            List statisticList = new List()
+                    .setSymbolIndent(12)
+                    .setListSymbol("\u2022");
 
-        // Add the image to your PDF document
-        document.add(image);
-        document.add(new Paragraph("Statistics from TourLogs:"));
-        // get Logs by tourId
-        tourLogListViewModel.refreshTourLogs();
-        tourLogs = tourLogListViewModel.getTourLogs();
-        // Iterate over the tourList and extract the desired information
-        double countTotalTime = 0;
-        double countRating = 0;
-        double countDifficulty = 0;
-        double totalTime;
-        double rating;
-        double difficulty;
-        int counter = 0;
-        for (TourLogDTO tourLog : singleTour.getTourLogs()) {
-            System.out.println("tourLog attached: " + tourLog.getComment());
-            countTotalTime += tourLog.getTotalTime();
-            countRating += tourLog.getRating();
-            countDifficulty += tourLog.getDifficulty();
-            counter++;
+            // Add ListItem objects
+            statisticList.add(new ListItem("Total Time on average: " + totalTime))
+                    .add(new ListItem("Rating 1-10 on average: " + rating))
+                    .add(new ListItem("Difficulty on average: " + difficulty))
+                    .add(new ListItem("To: " + singleTour.getTo()));
+            document.add(statisticList);
         }
-        totalTime = countTotalTime / counter;
-        rating = countRating / counter;
-        difficulty = countDifficulty / counter;
-        // Create a List
-        List statisticList = new List()
-                .setSymbolIndent(12)
-                .setListSymbol("\u2022");
-
-        // Add ListItem objects
-        statisticList.add(new ListItem("Total Time on average: " + totalTime))
-                .add(new ListItem("Rating 1-10 on average: " + rating))
-                .add(new ListItem("Difficulty on average: " + difficulty))
-                .add(new ListItem("To: " + singleTour.getTo()));
-        document.add(statisticList);
-
-    }
         //Close document
         document.close();
         //user feedback
