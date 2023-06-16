@@ -131,16 +131,7 @@ public class TourListView implements Initializable {
     }
 
     public void exportToursButtonAction() throws IOException {
-        List<TourDTO> tourList = tourListViewModel.getTours();
-        String jsonTours = new ObjectMapper().writeValueAsString(tourList);
-        System.out.println(jsonTours);
-        List<TourLogDTO> tourLogList = tourLogListViewModel.getTourLogs();
-        String jsonTourLogs = new ObjectMapper().writeValueAsString(tourLogList);
-        try {
-            jsonConverter.writeJSONFile(jsonTours, jsonTourLogs);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        tourListViewModel.exportTours();
     }
 
 }

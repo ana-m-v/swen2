@@ -2,6 +2,7 @@ package at.fhtw.swen2.controller;
 
 import at.fhtw.swen2.model.TourDTO;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
+import at.fhtw.swen2.presentation.viewmodel.TourListViewModel;
 import at.fhtw.swen2.service.TourService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -281,8 +282,9 @@ public class TourController {
     }
 
     @GetMapping("/saveaspdf/{id}")
-    public TourDTO createPDF(@PathVariable Long id) {
-        return tourService.getTourById(id);
+    public ResponseEntity<TourDTO> createPDF(@PathVariable Long id) {
+        TourDTO tour = tourService.getTourById(id);
+        return ResponseEntity.ok(tour);
     }
 
     @GetMapping("/createstats")
@@ -292,7 +294,7 @@ public class TourController {
 
     @GetMapping("/export")
     public ResponseEntity<List<TourDTO>> exportToursWithLogs() {
-        List<TourDTO> tours = tourService.getAllToursWithLogs();
+        List<TourDTO> tours = tourService.getAllTours();
         return ResponseEntity.ok(tours);
     }
 }

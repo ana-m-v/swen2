@@ -19,14 +19,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class JSONConverter {
     @Autowired
     TourViewModel tourViewModel;
     @Autowired
     TourListViewModel tourListViewModel;
-    public void writeJSONFile(String tours, String tourLogs) throws IOException {
+    public void writeJSONFile(String tours) throws IOException {
         // Get the current timestamp
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");

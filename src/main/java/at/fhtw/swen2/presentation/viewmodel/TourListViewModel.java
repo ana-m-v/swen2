@@ -1,9 +1,13 @@
 package at.fhtw.swen2.presentation.viewmodel;
 
+import at.fhtw.swen2.jsonConverter.JSONConverter;
 import at.fhtw.swen2.model.TourDTO;
+import at.fhtw.swen2.model.TourLogDTO;
 import at.fhtw.swen2.pdfwriter.PDFWriter;
 import at.fhtw.swen2.persistence.entity.TourEntity;
 import at.fhtw.swen2.presentation.Swen2ApplicationFX;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -19,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class TourListViewModel {
@@ -92,6 +97,18 @@ public class TourListViewModel {
             e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void exportTours() throws JsonProcessingException {
+        TourDTO[] tourList = restTemplate.getForObject(baseUrl + "/export", TourDTO[].class);
+        String jsonTours = new ObjectMapper().writeValueAsString(tourList);
+        System.out.println(jsonTours);
+        try {
+            JSONConverter jsonConverter = new JSONConverter();
+            jsonConverter.writeJSONFile(jsonTours);
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 }
