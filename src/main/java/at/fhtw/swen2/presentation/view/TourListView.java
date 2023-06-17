@@ -41,6 +41,10 @@ public class TourListView implements Initializable {
     public TourLogListViewModel tourLogListViewModel;
     @FXML
     public TableView tableView = new TableView<>();
+    @FXML
+    public TableColumn popularityColumn;
+    @FXML
+    public TableColumn childFriendlyColumn;
 
     @FXML
     private TableColumn<TourDTO, String> nameColumn;
@@ -73,6 +77,9 @@ public class TourListView implements Initializable {
         distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         toColumn.setCellValueFactory(new PropertyValueFactory<>("to"));
+        popularityColumn.setCellValueFactory(new PropertyValueFactory<>("popularity"));
+        childFriendlyColumn.setCellValueFactory(new PropertyValueFactory<>("childFriendly"));
+
         tableView.setItems(tourListViewModel.getTours());
 
         tableView.setOnMouseClicked(event -> {

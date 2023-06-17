@@ -71,7 +71,8 @@ public class TourView implements Initializable {
             logger.warn("Empty fields in Create New Tour Form");
             return;
         }
-        if (containsSpecialChars(nameTextField.getText()) || containsSpecialChars(descriptionTextField.getText()) || containsSpecialChars(fromTextField.getText()) || containsSpecialChars(toTextField.getText())) {
+        if (!containsSpecialChars(nameTextField.getText()) || !containsSpecialChars(descriptionTextField.getText()) ||
+                !containsSpecialChars(fromTextField.getText()) || !containsSpecialChars(toTextField.getText())) {
             feedbackText.setText("Special characters are not allowed.");
             logger.warn("Input contains special characters in Create New Tour Form");
             return;
@@ -90,10 +91,11 @@ public class TourView implements Initializable {
         } catch (NumberFormatException e) {
             System.out.println("Input String cannot be parsed to Integer. Good!");
         }
+
         feedbackText.setText("");
         tourViewModel.createTour();
     }
     private boolean containsSpecialChars(String text) {
-        return text.matches(".*[$&+,:;=?@#|\\/'\\\\<>.-^*()%!]");
+        return text.matches("^[a-zA-Z0-9_\\-., ]*$");
     }
-}
+} // "[$&\\+,:;=?@#|\\/'\\\\<>.-^*()%!]"

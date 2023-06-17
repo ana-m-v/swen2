@@ -187,7 +187,7 @@ public class TourEntity {
             for (TourLogEntity log : tourLogs) {
                 totalDifficulty += log.getDifficulty();
             }
-            return totalDifficulty / tourLogs.size();
+            return (10 - (totalDifficulty / tourLogs.size()));
         }
         return 0;
     }

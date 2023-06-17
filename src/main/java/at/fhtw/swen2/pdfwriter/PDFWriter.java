@@ -43,7 +43,7 @@ public class PDFWriter {
         // Get the current timestamp
         LocalDateTime currentTime = LocalDateTime.now();
 
-        // Define the format for the timestamp string
+        // format for the timestamp string
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         String timestampString = currentTime.format(formatter);
         String filename = tour.getId() + "_" +tour.getName() + "_" + timestampString +".pdf";
@@ -52,24 +52,17 @@ public class PDFWriter {
         File file = new File(dest);
         file.getParentFile().mkdirs();
 
-        //Initialize PDF writer
+        //Initialize PDF writer, document, psfDoc
         PdfWriter writer = new PdfWriter(dest);
-
-        //Initialize PDF document
         PdfDocument pdfDoc = new PdfDocument(writer);
-
-        // Initialize document
         Document document = new Document(pdfDoc);
 
-
-        // Add a Paragraph
         document.add(new Paragraph("Your selected Tour:"));
-        // Create a List
         List list = new List()
                 .setSymbolIndent(12)
                 .setListSymbol("\u2022");
 
-        // Add ListItem objects
+        // Add tour details
         list.add(new ListItem("Name: " +tour.getName()))
                 .add(new ListItem("Description: " +tour.getDescription()))
                 .add(new ListItem("From: " + tour.getFrom()))
@@ -78,19 +71,12 @@ public class PDFWriter {
                 .add(new ListItem("Time: "+ tour.getTime()))
                 .add(new ListItem("Transport Type: "+ tour.getTransportType()));
 
-
-        // Add the list
         document.add(list);
-        // add the image
         String imageUrl = tour.getRouteImage();
 
-        // Create an ImageData object from the URL
+        // Create an ImageData object from the URL - needed to create new image
         ImageData imageData = ImageDataFactory.create(imageUrl);
-
-        // Create an Image object from the ImageData
         Image image = new Image(imageData);
-
-        // Add the image to your PDF document
         document.add(image);
 
         //table for logs
@@ -130,13 +116,11 @@ public class PDFWriter {
         // Get the current timestamp
         LocalDateTime currentTime = LocalDateTime.now();
 
-        // Define the format for the timestamp string
+        // format for the timestamp string
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
-        // Format the current timestamp as a string
         String timestampString = currentTime.format(formatter);
         String dest = path +  "_statistic_" + timestampString + ".pdf";
-        System.out.println("PDFwriter activated");
+        //System.out.println("PDFwriter activated");
         File file = new File(dest);
         file.getParentFile().mkdirs();
 
@@ -144,15 +128,13 @@ public class PDFWriter {
         PdfWriter writer = new PdfWriter(dest);
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc);
-
-        // Add a Paragraph
         document.add(new Paragraph("Your selected Tour:"));
         // Create a List
         for(TourDTO singleTour : tour){
             List list = new List()
                     .setSymbolIndent(12)
                     .setListSymbol("\u2022");
-            // Add ListItem objects
+            // Add tour details
             list.add(new ListItem("Name: " + singleTour.getName()))
                     .add(new ListItem("Description: " + singleTour.getDescription()))
                     .add(new ListItem("From: " + singleTour.getFrom()))
@@ -163,14 +145,8 @@ public class PDFWriter {
             document.add(list);
             // add the image
             String imageUrl = singleTour.getRouteImage();
-
-            // Create an ImageData object from the URL
             ImageData imageData = ImageDataFactory.create(imageUrl);
-
-            // Create an Image object from the ImageData
             Image image = new Image(imageData);
-
-            // Add the image to your PDF document
             document.add(image);
             document.add(new Paragraph("Statistics from TourLogs:"));
             // get Logs by tourId
@@ -199,9 +175,9 @@ public class PDFWriter {
                     .setSymbolIndent(12)
                     .setListSymbol("\u2022");
 
-            // Add ListItem objects
+            // Add tour statistic
             statisticList.add(new ListItem("Total Time on average: " + totalTime))
-                    .add(new ListItem("Rating 1-10 on average: " + rating))
+                    .add(new ListItem("Popularity (average rating): " + rating))
                     .add(new ListItem("Difficulty on average: " + difficulty))
                     .add(new ListItem("To: " + singleTour.getTo()));
             document.add(statisticList);
@@ -209,7 +185,6 @@ public class PDFWriter {
             document.add(new Paragraph());
 
         }
-        //Close document
         document.close();
         //user feedback
         Alert alert = new Alert(AlertType.INFORMATION);

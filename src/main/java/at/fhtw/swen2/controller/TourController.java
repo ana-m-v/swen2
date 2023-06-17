@@ -105,7 +105,7 @@ public class TourController {
             tourDto.setRouteImage(imgUrl);
 
             tourService.createTour(tourDto);
-            tourListViewModel.refreshTours();
+          ////  tourListViewModel.refreshTours();
             return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Error creating tour", e);
