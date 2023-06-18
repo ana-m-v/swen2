@@ -126,6 +126,7 @@ public class LogListView implements Initializable {
 
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 if (selectedTour != null) {
+                    feedbackText.setText("");
                     tourViewModel.setSelectedTour(selectedTour);
                     tableViewLog.setItems(FXCollections.observableList(selectedTour.getTourLogs()));
                 }
@@ -200,7 +201,8 @@ public class LogListView implements Initializable {
             tourLogViewModel.createTourLog(selectedTour);
         } else {
             logger.warn("SelectedTour is null");
-            feedbackText.setText("All of the fields must be filled out.");
+            feedbackText.setText("You have to select a Tour!");
+            return;
         }
         tableViewLog.setItems(FXCollections.observableList(selectedTour.getTourLogs()));
     }
@@ -253,7 +255,7 @@ public class LogListView implements Initializable {
                 .build();
 
         tourLog.setId(tourLogViewModel.getId());
-        feedbackText.setText("");
+        feedbackText.setText("Tour edited, please select tour to refresh logs.");
         tourLogViewModel.updateTourLog(tourLog);
     }
 
