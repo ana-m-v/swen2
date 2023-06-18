@@ -208,7 +208,7 @@ public class TourViewModel {
         TourDTO tour = TourDTO.builder().name(getName()).description(getDescription()).distance(getDistance()).time(getTime()).from(getFrom()).to(getTo()).transportType(getTransportType()).routeImage(getRouteImage()).build();
         try {
             TourDTO response = restTemplate.postForObject(baseUrl, tour, TourDTO.class);
-            tourListViewModel.getTours().add(response);
+//            tourListViewModel.getTours().add(response);
             return response;
         } catch (RestClientException e) {
             logger.error("Error with createTour() in TourViewModel");

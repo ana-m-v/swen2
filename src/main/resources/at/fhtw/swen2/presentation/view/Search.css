@@ -1,8 +1,9 @@
 TableView {
     -fx-pref-height: 350px;
     -fx-pref-width: 750px;
+    -fx-min-width: 800px;
 }
 
 TableColumn {
-    -fx-pref-width: 75px;
+    -fx-pref-width: 150px;
 }
